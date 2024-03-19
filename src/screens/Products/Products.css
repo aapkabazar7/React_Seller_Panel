@@ -1,0 +1,169 @@
+#filterDiv {
+    display: flex;
+    margin: 20px 20px;
+    background-color: white;
+    border-radius: 12px;
+    padding: 20px;
+    gap: 70px;
+    justify-content: space-between;
+}
+
+#selectOptions {
+    display: flex;
+    flex: 6;
+    gap: 10px 20px;
+    flex-wrap: wrap;
+}
+
+#selectOptions select {
+    width: fit-content;
+    height: 40px;
+    border-radius: 12px;
+    border: 1px solid rgb(193, 193, 193);
+    padding: 5px;
+}
+
+#selectOptions input {
+    width: 300px;
+    height: 40px;
+    border-radius: 12px;
+    border: 1px solid rgb(193, 193, 193);
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+#searchBtns {
+    display: flex;
+    flex: 4;
+    gap: 10px 20px;
+    flex-wrap: wrap;
+    justify-content: right;
+}
+
+#searchBtns button {
+    width: 150px;
+    height: 40px;
+    border-radius: 12px;
+    font-size: 16px;
+}
+
+.searchBtn {
+    border: 1px solid #DACC00;
+    background-color: #FFEF03;
+}
+
+.clearBtn {
+    background-color: #E21B1B1A;
+    border: 1px solid #E21B1B;
+}
+
+.importBtn {
+    background-color: #0D9E671A;
+    border: 1px solid #0D9E67;
+}
+
+.exportBtn {
+    border: 1px solid rgb(175, 175, 175);
+}
+
+
+#ProductListContainer {
+    background-color: white;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    margin: 20px;
+    height: fit-content;
+    flex-direction: column;
+}
+
+#productList {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}
+
+.productImage {
+    width: 50px;
+    height: 50px;
+}
+
+#productList input {
+    width: 30px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: rgb(236 236 236 / 50%);
+    color: black;
+}
+
+#productList td {
+    padding: 0;
+}
+
+.DisablePinModal {
+    background-color: #E21B1B1A;
+    /* width: 40px; */
+    /* height: 40px; */
+    padding: 10px 20px;
+    border-radius: 16px;
+    border: 0;
+}
+
+.SaveBtn {
+    background-color: #0D9E67;
+    border: 0;
+    color: white;
+    border-radius: 16px;
+    padding: 10px 20px;
+}
+
+.pinCheckBox {
+    padding: 10px 20px;
+    background-color: rgb(242, 242, 242);
+    border-radius: 16px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    height:25px;
+}
+
+.pinCheckBox input {
+    height: 20px;
+    width: 20px;
+    border-radius: 4px;
+    /* border-color: aliceble; */
+    border: 1px solid gray;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 9999;
+    overflow: hidden;
+    padding: 5% 10%;
+    /* display: flex; */
+}
+.selectBtn{
+    background-color: transparent;
+    border-radius: 20px;
+    margin: 10px;
+    padding: 10px 20px;
+    border: 1px solid rgb(206, 206, 206);
+}
+
+.modal-open {
+    overflow: hidden;
+}
+
+#selectOptions option {
+    text-transform: capitalize;
+}
+#selectOptions select{
+    text-transform: capitalize;
+
+}

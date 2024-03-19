@@ -1,0 +1,157 @@
+#categoryRootContainer{
+    display: flex;
+    margin: 20px;
+    background-color: white;
+    /* height: 200px; */
+    border-radius: 12px;
+    flex: 1;
+    flex-direction: column;
+    padding: 20px;
+}
+.categoryProductButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 10px;
+    width: fit-content;
+    /* border-radius: 12px; */
+    border: 0;
+    text-transform: capitalize;
+}
+.categoryProductButton.active{
+    background-color: grey;
+    color: white;
+}
+#categoryRootContainer .buttonContainer{
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    flex-wrap: nowrap;
+    overflow-x: scroll;
+    overflow: hidden;
+    border-radius: 24px;
+    /* margin: 0px 10px; */
+    gap: 1px
+}
+
+#subCategoryContainer{
+    display: flex;
+    flex: 1;
+    border: 1px solid rgb(203, 203, 203);
+    border-radius: 12px;
+    margin-top: 10px;
+    overflow: hidden;
+}
+#subCategoryList{
+    display: flex;
+    flex-direction: column;
+    width: calc(100% + 18px);
+    flex: 0.2;
+    text-transform: capitalize;
+    overflow-y: scroll;
+    height: 50vh;
+    overflow-x: hidden;
+    /* overflow-y: hidden */
+}
+
+#leafCategoryList{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 10px 20px;
+    text-transform: capitalize;
+    overflow: hidden;
+}
+
+.subCategoryProductButton{
+    padding: 15px 10px;
+    border: 0;
+    text-transform: capitalize;
+}
+.subCategoryProductButton.active{
+    background-color: white;
+}
+.leafCategoryItem{
+    display: flex;
+    justify-content: space-between;
+    width: 29%;
+}
+.leafCategoryItem input{
+    width: 20px;
+    height: 20px;
+}
+.leafCategoryContainer{
+    border-top: 1px solid rgb(201, 201, 201);
+    padding: 20px 0px;
+    margin: 5px 0;
+    flex:1;
+    width: calc(100% + 36px);
+    overflow-y: scroll;
+    /* overflow-x: hidden; */
+}
+#leafCategoryList .SaveBtnDiv{
+    /* position:  absolute; */
+    display: flex;
+    justify-content: flex-end;
+}
+#leafCategoryList .SaveBtnDiv button{
+    
+}
+
+/* toggle button css  */
+/* The switch - the box around the slider */
+.switch {
+    font-size: 17px;
+    position: relative;
+    display: inline-block;
+    width: 2.5em;
+    height: 1.375em;
+  }
+  
+  /* Hide default HTML checkbox */
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  /* The slider */
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #fff;
+    border: 1px solid #adb5bd;
+    transition: .4s;
+    border-radius: 18px;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 0.9em;
+    width: 0.9em;
+    border-radius: 20px;
+    left: 0.2em;
+    bottom: 0.2em;
+    background-color: #adb5bd;
+    transition: .4s;
+  }
+  
+  input:checked + .slider {
+    background-color: #c6c6c6;
+    border: 1px solid #b2b2b2;
+  }
+  
+  input:focus + .slider {
+    box-shadow: 0 0 1px #e2e2e2;
+  }
+  
+  input:checked + .slider:before {
+    transform: translateX(1.1em);
+    background-color: #fff;
+  }
+  

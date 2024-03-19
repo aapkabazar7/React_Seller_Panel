@@ -1,0 +1,67 @@
+#CustomerDetailsRootContainer{
+    display: flex;
+    flex-direction: column;
+}
+#CustomerDetailsRootContainer #topBtnsDiv{
+    display: flex;
+    flex: 1;
+    margin: 10px 20px;
+    padding: 0px;
+    background-color: transparent;
+    /* height: 50px; */
+    justify-content: space-between;
+    align-items: center;
+}
+#CustomerDetailsRootContainer #topBtnsDiv button{
+    border: 0;
+    box-shadow:  1px 1px 2px 0px rgba(0,0,0,0.4);
+    background-color: white;
+    border-radius: 12px;
+    padding: 12px 15px 12px 10px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    gap: 10px;
+    cursor: pointer;
+}
+#CustomerDetailsRootContainer #CustomerDetailsContainer{
+    display: flex;
+    flex: 1;
+    margin: 5px 20px;
+    background-color: white;
+    height: 300px;
+    border-radius: 12px;
+    box-shadow:  1px 1px 2px 0px rgba(0,0,0,0.4);
+    padding: 20px;
+    flex-direction: column;
+}
+
+#CustomerDetailsRootContainer h2{
+    margin: 5px 0px;
+    text-transform: capitalize;
+    font-weight: 600;
+}
+#CustomerDetailsContainer .line{
+    height: 1px;
+    background-color: rgb(216, 216, 216);
+    display: flex;
+    margin: 5px 0% 5px 0;
+}
+#CustomerDetailsRootContainer h4{
+    margin: 5px 0px;
+    text-transform: capitalize;
+    font-weight: 700;
+}
+#CustomerDetailsRootContainer span{
+    font-weight: 400;
+    margin: 5px 5px 5px 0;
+    text-transform: capitalize;
+    color: rgb(70, 70, 70);
+}
+
+#CustomerDetailsRootContainer #orderList{
+    background-color: white;
+    margin: 10px 20px;
+    border-radius: 12px;
+    padding: 10px;
+}
