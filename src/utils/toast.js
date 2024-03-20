@@ -46,14 +46,9 @@ export const formatIndian = (str) => {
 };
 export const convertTo24Hour = (time) => {
   let hours, minutes, modifier;
-
-  // Check if the time string includes "AM" or "PM"
-  console.log("time", time);
   if (time.includes("AM") || time.includes("PM")) {
-    // Split the time and modifier
     const timeParts = time.match(/^(\d+):(\d+)([AP]M)$/);
     if (!timeParts) {
-      // Invalid time format
       return "Invalid time format" + time;
     }
     hours = parseInt(timeParts[1]);
@@ -166,7 +161,9 @@ export function printInvoice(data) {
   doc.text(140, verticalOffset + 10, invoiceNumber);
   const invoiceDate = `Invoice Date: ${moment(data.invoice.date).format("MMM DD, YYYY")}`;
   doc.text(140, verticalOffset + 15, invoiceDate);
-  const deliveryDate = `Delivery Date: ${moment(data.invoice.deliveryDate.date ? data.invoice.deliveryDate.date : data.invoice.deliveryDate).format("MMM DD, YYYY")}`;
+  const deliveryDate = `Delivery Date: ${moment(data.invoice.deliveryDate.date ? data.invoice.deliveryDate.date : data.invoice.deliveryDate).format(
+    "MMM DD, YYYY"
+  )}`;
   doc.text(140, verticalOffset + 20, deliveryDate);
   const deliverySlot = `Delivery Slot: ${data.invoice.deliveryTime.slot}`;
   doc.text(140, verticalOffset + 25, deliverySlot);
