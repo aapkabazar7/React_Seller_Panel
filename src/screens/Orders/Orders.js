@@ -56,31 +56,31 @@ const Orders = () => {
     setToDate(newToDate);
     setFromDate(newFromDate);
   }, [selectedDateOption]);
-
-  useEffect(() => {
-    const getOrderCount = async () => {
-      try {
-        const response = await getOrderWiseReport();
-        if (response) {
-          let temp = response.orderCount;
-          let allOrders = 0;
-          temp.forEach((a) => {
-            allOrders += a.count;
-          });
-          temp.push({
-            _id: "all_orders",
-            count: allOrders,
-          });
-          temp.sort((a, b) => {
-            return a._id.localeCompare(b._id);
-          });
-          setOrderCount(temp);
-        }
-      } catch (error) {
-        console.error("Error fetching order count:", error);
+  const getOrderCount = async () => {
+    try {
+      const response = await getOrderWiseReport();
+      if (response) {
+        let temp = response.orderCount;
+        let allOrders = 0;
+        temp.forEach((a) => {
+          allOrders += a.count;
+        });
+        temp.push({
+          _id: "all_orders",
+          count: allOrders,
+        });
+        temp.sort((a, b) => {
+          return a._id.localeCompare(b._id);
+        });
+        setOrderCount(temp);
+        console.log(temp);
       }
-    };
-    getOrderCount();
+    } catch (error) {
+      console.error("Error fetching order count:", error);
+    }
+  };
+  useEffect(() => {
+    getOrderCount().then();
   }, []);
 
   useEffect(() => {
@@ -125,14 +125,20 @@ const Orders = () => {
     try {
       const result = await getOrders(orders, fromDate, toDate, PhoneNumber);
       if (requestTimestamp === latestRequestTimestamp.current) {
-        setData(result);
-        setCurrentPageNumber(1);
+        if (!result.success) {
+          setNoMoreOrders(true);
+        } else {
+          setData(result);
+          setCurrentPageNumber(1);
+        }
       } else {
         console.log("validation failed", result);
       }
     } catch (error) {
       console.error("Error fetching orders:", error);
     }
+
+    getOrderCount().then();
 
     setLoadingOrders(false);
   };
@@ -152,7 +158,7 @@ const Orders = () => {
       return null;
     }
 
-    return data.orders.map((item, index) => <SingleOrderCard item={item} index={index} />);
+    return data.orders.map((item, index) => <SingleOrderCard key={index} setCurrentPageNumber={setCurrentPageNumber} setData={setData} latestRequestTimestamp={latestRequestTimestamp} fetchData={fetchData} item={item} index={index} />);
   };
 
   return (
@@ -291,26 +297,26 @@ const Orders = () => {
         <div className="orderNav">
           <h5>All Orders</h5>
           <div className="orderNavButtons">
-            <button className={orders === "all" ? "active" : ""} onClick={() => handleButtonClick("all")}>
-              All orders {orderCount && orderCount[0].count}
+            <button style={{ width: 140 }} className={orders === "all" ? "active" : ""} onClick={() => handleButtonClick("all")}>
+              All orders ({orderCount && orderCount[0].count})
             </button>
-            <button className={orders === "pending" ? "active" : ""} onClick={() => handleButtonClick("pending")}>
-              New orders {orderCount && orderCount[1].count}
+            <button style={{ width: 140 }} className={orders === "pending" ? "active" : ""} onClick={() => handleButtonClick("pending")}>
+              New orders ({orderCount && orderCount[5].count})
             </button>
-            <button className={orders === "confirmed" ? "active" : ""} onClick={() => handleButtonClick("confirmed")}>
-              Confirmed {orderCount && orderCount[2].count}
+            <button style={{ width: 140 }} className={orders === "confirmed" ? "active" : ""} onClick={() => handleButtonClick("confirmed")}>
+              Confirmed ({orderCount && orderCount[2].count})
             </button>
-            <button className={orders === "processed" ? "active" : ""} onClick={() => handleButtonClick("processed")}>
-              Processed {orderCount && orderCount[3].count}
+            <button style={{ width: 140 }} className={orders === "processed" ? "active" : ""} onClick={() => handleButtonClick("processed")}>
+              Processed ({orderCount && orderCount[6].count})
             </button>
-            <button className={orders === "dispatched" ? "active" : ""} onClick={() => handleButtonClick("dispatched")}>
-              Dispatched {orderCount && orderCount[4].count}
+            <button style={{ width: 140 }} className={orders === "dispatched" ? "active" : ""} onClick={() => handleButtonClick("dispatched")}>
+              Dispatched ({orderCount && orderCount[4].count})
             </button>
-            <button className={orders === "delivered" ? "active" : ""} onClick={() => handleButtonClick("delivered")}>
-              Delivered {orderCount && orderCount[5].count}
+            <button style={{ width: 140 }} className={orders === "delivered" ? "active" : ""} onClick={() => handleButtonClick("delivered")}>
+              Delivered ({orderCount && orderCount[3].count})
             </button>
-            <button className={orders === "cancelled" ? "active" : ""} onClick={() => handleButtonClick("cancelled")}>
-              Cancelled {orderCount && orderCount[0].count}
+            <button style={{ width: 140 }} className={orders === "cancelled" ? "active" : ""} onClick={() => handleButtonClick("cancelled")}>
+              Cancelled ({orderCount && orderCount[1].count})
             </button>
           </div>
         </div>

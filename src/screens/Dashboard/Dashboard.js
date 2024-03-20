@@ -2,12 +2,13 @@ import React, { useEffect } from "react";
 import "./Dashboard.css";
 import { useState } from "react";
 import Reports from "./Reports";
-import { getCardData, getDashboardDetails, getGraphData, getOrderSourceReport, getOrderWiseReport, getProductCount, getTopProduct } from "../../Apis/Dashboard";
+import { getCardData, getDashboardDetails, getGraphData, getOrderSourceReport, getOrderWiseReport, getProductCount, getTopProduct, refreshData } from "../../Apis/Dashboard";
 import SemiDonut from "./SemiDonut";
 import { Divider, Skeleton } from "@mui/material";
 import { Bar, Doughnut } from "react-chartjs-2";
-import { formatIndian } from "../../utils/toast";
+import { formatIndian, printInvoice } from "../../utils/toast";
 import MonthlyChart from "./AnnualChart";
+import { toast } from "react-toastify";
 
 const Dashboard = () => {
   const [fromDate, setFromDate] = useState("");
@@ -19,6 +20,7 @@ const Dashboard = () => {
     fromDate: "2024-01-15",
     toDate: "2024-02-15",
   });
+  const refreshRef = React.useRef();
   const [donutData, setDonutData] = useState([]);
   const [cardData, setCardData] = useState({});
   const [loading, setLoading] = useState({
@@ -32,18 +34,22 @@ const Dashboard = () => {
     topBrandLoading: true,
   });
   const getDonutData = async () => {
+    setDonutData([]);
     const result = await getOrderSourceReport(donutDates.fromDate, donutDates.toDate);
     let temp = [];
-    console.log("RESULT", result.users);
-    result.users.forEach((element) => {
-      temp[element._id] = element.count;
-    });
+    if (result.success === false) {
+      toast.error("Error fetching donut data");
+    } else {
+      result.users.forEach((element) => {
+        temp[element._id] = element.count;
+      });
 
-    setDonutData(temp);
-    setLoading((e) => ({
-      ...e,
-      donutLoading: false,
-    }));
+      setDonutData(temp);
+      setLoading((e) => ({
+        ...e,
+        donutLoading: false,
+      }));
+    }
   };
 
   const getCardDataSet = async () => {
@@ -56,6 +62,46 @@ const Dashboard = () => {
       console.log(res.data);
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const [chartData, setChartData] = useState(null);
+  const [selectedOption, setSelectedOption] = useState("sales");
+  const [chartDuration, setChartDuration] = useState("monthly");
+
+  const fetchData = async () => {
+    try {
+      const res = await getGraphData(chartDuration.toLowerCase());
+      const apiData = res.data.report;
+      const prevApiData = res.data.prevReport; // Extract data from prevReport
+      if (apiData && prevApiData) {
+        const months = apiData.map((data) => data._id.period);
+        const totalAmounts = apiData.map((data) => data.totalAmount);
+        const counts = apiData.map((data) => data.count);
+        const prevTotalAmounts = prevApiData.map((data) => data.totalAmount); // Extract prevReport total amounts
+        const prevCounts = prevApiData.map((data) => data.count); // Extract prevReport counts
+
+        setChartData({
+          labels: months,
+          datasets: [
+            {
+              label: selectedOption === "sales" ? "Total Amount" : "Count",
+              borderColor: "rgba(54, 162, 235, 0.8)",
+              backgroundColor: "rgba(54, 162, 235, 0.8)",
+              data: selectedOption === "sales" ? totalAmounts : counts,
+            },
+            {
+              label: selectedOption === "sales" ? "Previous Total Amount" : "Previous Count", // Label for prevReport data
+              borderColor: "rgba(255, 99, 132, 0.8)", // Red color for dotted line
+              borderDash: [5, 5], // Set border dashes for a dotted line
+              data: selectedOption === "sales" ? prevTotalAmounts : prevCounts, // Use prevReport data
+            },
+          ],
+        });
+        setLoading((e) => ({ ...e, annualLoading: false }));
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
     }
   };
 
@@ -150,6 +196,19 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
+    const fetchDataAndFinishLoading = async () => {
+      await fetchData();
+    };
+
+    fetchDataAndFinishLoading();
+  }, [selectedOption, chartDuration]);
+
+  const handleOptionChange = (e) => {
+    setSelectedOption(e.target.value);
+  };
+
+  useEffect(() => {
+    fetchData().then();
     getOrderData().then();
     getCardDataSet().then();
     getGraphs("monthly").then();
@@ -157,6 +216,10 @@ const Dashboard = () => {
     getDonutData().then();
     getStockData().then();
   }, []);
+
+  useEffect(() => {
+    getDonutData().then();
+  }, [donutDates]);
 
   return (
     <div
@@ -268,12 +331,39 @@ const Dashboard = () => {
               placeholder="Start date"
             />
           </div>
+
           <div
             style={{
               flex: 1,
               display: "flex",
               justifyContent: "flex-end",
             }}>
+            <button
+              ref={refreshRef}
+              onClick={async () => {
+                // setLoading({
+                //   cardsLoading: true,
+                //   annualLoading: true,
+                //   donutLoading: true,
+                //   orderWiseLoading: true,
+                //   stockWiseLoading: true,
+                //   topProductLoading: true,
+                //   topCategoryLoading: true,
+                //   topBrandLoading: true,
+                // });
+                const result = await refreshData();
+                if (result.success) {
+                  toast.success("Data refreshed");
+                }
+                refreshRef.current.blur();
+              }}
+              type="button"
+              className="refreshButton">
+              <svg xmlns="http://www.w3.org/2000/svg" width={16} height={16} fill="currentColor" className="bi bi-arrow-repeat" viewBox="0 0 16 16">
+                <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z" />
+                <path fillRule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z" />
+              </svg>
+            </button>
             <button
               style={{
                 backgroundColor: "#ffef03",
@@ -298,11 +388,11 @@ const Dashboard = () => {
           }}>
           {loading.cardsLoading ? (
             <>
-              <Skeleton variant="rounded" style={{ borderRadius: 10, flex: 1, height: 60 }} />
-              <Skeleton variant="rounded" style={{ borderRadius: 10, flex: 1, height: 60 }} />
-              <Skeleton variant="rounded" style={{ borderRadius: 10, flex: 1, height: 60 }} />
-              <Skeleton variant="rounded" style={{ borderRadius: 10, flex: 1, height: 60 }} />
-              <Skeleton variant="rounded" style={{ borderRadius: 10, flex: 1, height: 60 }} />
+              <Skeleton animation={false} variant="rounded" style={{ borderRadius: 10, flex: 1, height: 60 }} />
+              <Skeleton animation={false} variant="rounded" style={{ borderRadius: 10, flex: 1, height: 60 }} />
+              <Skeleton animation={false} variant="rounded" style={{ borderRadius: 10, flex: 1, height: 60 }} />
+              <Skeleton animation={false} variant="rounded" style={{ borderRadius: 10, flex: 1, height: 60 }} />
+              <Skeleton animation={false} variant="rounded" style={{ borderRadius: 10, flex: 1, height: 60 }} />
             </>
           ) : (
             <>
@@ -336,14 +426,15 @@ const Dashboard = () => {
         style={{
           marginTop: 10,
         }}>
-        {!loading.annualLoading ? (
+        {loading.annualLoading ? (
           <Skeleton
+            animation={false}
             variant="rounded"
             style={{
               borderRadius: 10,
               flex: 0.7,
             }}
-            height={400}
+            height={480}
           />
         ) : (
           <div
@@ -357,17 +448,18 @@ const Dashboard = () => {
               display: "flex",
               flexDirection: "column",
             }}>
-            <MonthlyChart />
+            <MonthlyChart chartData={chartData} setChartData={setChartData} chartDuration={chartDuration} setChartDuration={setChartDuration} selectedOption={selectedOption} handleOptionChange={handleOptionChange} />
           </div>
         )}
         {loading.donutLoading ? (
           <Skeleton
+            animation={false}
             variant="rounded"
             style={{
               borderRadius: 10,
               flex: 0.3,
             }}
-            height={400}
+            height={480}
           />
         ) : (
           <div id="sourceReport">
@@ -387,6 +479,7 @@ const Dashboard = () => {
         }}>
         {loading.orderWiseLoading ? (
           <Skeleton
+            animation={false}
             variant="rounded"
             style={{
               borderRadius: 10,
@@ -407,6 +500,7 @@ const Dashboard = () => {
         )}
         {loading.stockWiseLoading ? (
           <Skeleton
+            animation={false}
             variant="rounded"
             style={{
               borderRadius: 10,
@@ -455,6 +549,7 @@ const Dashboard = () => {
         }}>
         {loading.topProductLoading ? (
           <Skeleton
+            animation={false}
             variant="rounded"
             style={{
               borderRadius: 10,
@@ -463,64 +558,73 @@ const Dashboard = () => {
             height={400}
           />
         ) : (
-          <div
-            className="Container"
-            style={{
-              flex: 1,
-              display: "flex",
-              flexDirection: "column",
-            }}>
-            <h4>Top Products</h4>
-            <div className="statCard2">
-              {topProducts?.slice(0, 5).map((a, index) => (
-                <div
-                  key={index}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    padding: 2,
-                    marginBottom: 2,
-                  }}>
+          <div style={{ height: 400, overflow: "hidden", backgroundColor: "white", borderRadius: 8, padding: "5px 0 5px 17px" }}>
+            <div
+              className=""
+              style={{
+                width: "100%",
+                height: "100%",
+                flex: 1,
+                paddingRight: 17,
+                boxSizing: "content-box",
+                display: "flex",
+                flexDirection: "column",
+                maxHeight: 400,
+                overflowY: "scroll",
+              }}>
+              <h4>Top Products</h4>
+              <div className="statCard2">
+                {topProducts?.map((a, index) => (
                   <div
+                    key={index}
                     style={{
                       display: "flex",
-                      flex: 1,
-                      textTransform: "capitalize",
-                    }}>
-                    {a.name}
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      flex: 1,
-                      flexDirection: "row",
-                      fontSize: 14,
-                      color: "#808080",
-                      marginBottom: 10,
+                      flexDirection: "column",
+                      padding: 2,
+                      marginBottom: 2,
                     }}>
                     <div
                       style={{
+                        display: "flex",
                         flex: 1,
+                        textTransform: "capitalize",
                       }}>
-                      Qty: <strong>{formatIndian(a.totalQuantity)}</strong>
+                      {a.name}
                     </div>
                     <div
                       style={{
+                        display: "flex",
                         flex: 1,
+                        flexDirection: "row",
+                        fontSize: 14,
+                        color: "#808080",
+                        marginBottom: 10,
                       }}>
-                      {" "}
-                      Sale :<strong>₹ {formatIndian(Math.floor(a.totalPrice))}</strong>
+                      <div
+                        style={{
+                          flex: 1,
+                        }}>
+                        Qty: <strong>{formatIndian(a.totalQuantity)}</strong>
+                      </div>
+                      <div
+                        style={{
+                          flex: 1,
+                        }}>
+                        {" "}
+                        Sale :<strong>₹ {formatIndian(Math.floor(a.totalPrice))}</strong>
+                      </div>
                     </div>
+                    <Divider />
                   </div>
-                  <Divider />
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         )}
 
         {loading.topCategoryLoading ? (
           <Skeleton
+            animation={false}
             variant="rounded"
             style={{
               borderRadius: 10,
@@ -586,6 +690,7 @@ const Dashboard = () => {
 
         {loading.topBrandLoading ? (
           <Skeleton
+            animation={false}
             variant="rounded"
             style={{
               borderRadius: 10,
