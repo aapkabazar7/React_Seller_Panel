@@ -17,14 +17,19 @@ const Products = () => {
   const [noMoreProducts, setNoMoreProducts] = useState(false);
   const [loadingProducts, setLoadingProducts] = useState(false);
   const [page, setPage] = useState(0);
+  const [searchKeyword,setSearchKeyword] = useState("");
 
   const getData = async () => {
     if (!loadingProducts) {
       setLoadingProducts(true);
       try {
-        const result = await fetchProducts(selectedCategoryId, selectedSubCategoryID, selectedLeafCategoryId, selectedbrandId, page);
+        const result = await fetchProducts(selectedCategoryId, selectedSubCategoryID, selectedLeafCategoryId, selectedbrandId, searchKeyword, page);
         if (result.success === true) {
-          setProducts((data) => [...data, ...result.products]);
+          if(page === 0){
+            setProducts(result.products);
+          }else{
+            setProducts((data) => [...data, ...result.products]);
+          }
         } else {
           setNoMoreProducts(true);
           console.error(result.message);
@@ -38,8 +43,18 @@ const Products = () => {
   };
 
   React.useEffect(() => {
+    console.log(searchKeyword)
     getData().then();
   }, [page]);
+  useEffect(()=>{
+    console.log(searchKeyword);
+    if(page === 0){
+
+      getData().then();
+    }else{
+      setPage(0);
+    }
+  },[searchKeyword])
 
   const mapCategories = () => {
     return tree?.map((item, index) => {
@@ -199,7 +214,7 @@ const Products = () => {
         </div>
         <div style={{ flex: 1, display: "flex", flexDirection: "row", gap: 20 }}>
           <div style={{ flex: 0.6, display: "flex", gap: 20 }}>
-            <input style={{ flex: 5, paddingLeft: 10 }} placeholder="Search by Product Name,BarCode, SKU and HSN" />
+            <input style={{ flex: 5, paddingLeft: 10 }} placeholder="Search by Product Name,BarCode, SKU and HSN" onBlur={(e)=>{setSearchKeyword(e.target.value)}}/>
             <select style={{ flex: 1, borderRadius: 10, textAlign: "center" }}>
               <option value="all">All</option>
               <option value="active">Active</option>
@@ -255,7 +270,7 @@ const Products = () => {
           </div>
         </div>
       </div>
-      <AllProductList page={page} setPage={setPage} loadingProducts={loadingProducts} products={products} noMoreProducts={noMoreProducts} />
+      <AllProductList page={page} setPage={setPage} keyword={searchKeyword} loadingProducts={loadingProducts} products={products} noMoreProducts={noMoreProducts} />
     </div>
   );
 };

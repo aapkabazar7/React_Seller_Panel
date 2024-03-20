@@ -558,7 +558,8 @@ const Dashboard = () => {
             height={400}
           />
         ) : (
-          <div style={{ height: 400, overflow: "hidden", backgroundColor: "white", borderRadius: 8, padding: "5px 0 5px 17px" }}>
+          <div style={{ height: 400, overflow: "hidden", backgroundColor: "white", borderRadius: 8, padding: "5px 0 10px 17px" }}>
+            <h4>Top Products</h4>
             <div
               className=""
               style={{
@@ -572,7 +573,6 @@ const Dashboard = () => {
                 maxHeight: 400,
                 overflowY: "scroll",
               }}>
-              <h4>Top Products</h4>
               <div className="statCard2">
                 {topProducts?.map((a, index) => (
                   <div

@@ -179,7 +179,7 @@ textarea:focus {
   background-color: #4c8bf5;
   border-color: transparent;
   transform: scale(0.8);
-  box-shadow: 0 0 20px #4c8bf580;
+  box-shadow: none;
 }
 
 .radio-button__input:checked + .radio-button__label {
