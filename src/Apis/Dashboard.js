@@ -112,4 +112,19 @@ const getCardData = async (sd, ed) => {
   }
 };
 
-export { getDashboardDetails, getOrderSourceReport, getTopProduct, getGraphData, getCardData, getOrderWiseReport, getProductCount };
+const refreshData = async () => {
+  const url = `${baseURL}dashboard/dailyStat`;
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        "x-access-token": token,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    throw error; // Re-throwing the error for handling in the calling code
+  }
+};
+
+export { getDashboardDetails, getOrderSourceReport, getTopProduct, getGraphData, getCardData, getOrderWiseReport, getProductCount, refreshData };
