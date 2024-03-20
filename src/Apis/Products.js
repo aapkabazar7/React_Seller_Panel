@@ -76,9 +76,7 @@ const updateProductInfo = async (data) => {
 };
 const addNewProductApi = async (page = 0) => {
   try {
-    const res = await axios.get(
-      `
-${baseURL}catalogue/products?page=${page}&limit=${pageLimit}&added=false`,
+    const res = await axios.get(`${baseURL}catalogue/products?page=${page}&limit=${pageLimit}&added=false`,
       headers
     );
     if (res.status === 200) return res.data;

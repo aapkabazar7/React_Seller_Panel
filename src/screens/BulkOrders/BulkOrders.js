@@ -6,8 +6,9 @@ import { getBulkOrdersApi } from "../../Apis/BulkOrders";
 
 const BulkOrders = () => {
 
-    const [orders, setOrders] = useState('all');
-    const [data, setData] = useState();
+    const [data, setData] = useState({
+        bulkOrders: []
+    });
     const today = new Date().toISOString().split('T')[0];
     const [toDate, setToDate] = useState(today);
     const [fromDate, setFromDate] = useState(today);
@@ -18,120 +19,45 @@ const BulkOrders = () => {
     const [currentPageNumber, setCurrentPageNumber] = useState(0);
     const [PhoneNumber, setPhoneNumber] = useState('')
 
-    const handleButtonClick = (orderType) => {
-        setOrders(orderType);
+   
+    const loadOrders = async () => {
+        if (loadingOrders ) return;
+        setLoadingOrders(true);
+        try {
+            const response = await getBulkOrdersApi(currentPageNumber + 1);
+            setCurrentPageNumber(prev =>(prev +1) )
+            if (response.data.bulkOrders === undefined) {
+                setNoMoreOrders(true);
+            } else {
+                setData(prevData => ({
+                    ...prevData,
+                    bulkOrders: [...prevData.bulkOrders, ...response.data.bulkOrders]
+                }));
+            }
+        } catch (error) {
+            console.error("Error loading more orders:", error);
+        }
+        setLoadingOrders(false);
     };
 
-    useEffect(() => {
-        const today = new Date();
-        let newToDate;
-        let newFromDate;
-
-        switch (selectedDateOption) {
-            case 'today':
-                newToDate = today.toISOString().split('T')[0];
-                newFromDate = newToDate;
-                break;
-            case 'yesterday':
-                const yesterday = new Date(today);
-                yesterday.setDate(yesterday.getDate() - 1);
-                newToDate = yesterday.toISOString().split('T')[0];
-                newFromDate = newToDate;
-                break;
-            case 'last7Days':
-                const last7Days = new Date(today);
-                last7Days.setDate(last7Days.getDate() - 6); // Go back 6 days to include today
-                newFromDate = last7Days.toISOString().split('T')[0];
-                newToDate = today.toISOString().split('T')[0];
-                break;
-            case 'custom':
-                // If you want toDate and fromDate to be empty when custom is selected
-                newToDate = '';
-                newFromDate = '';
-                break;
-            default:
-                // Handle default case here
-                break;
-        }
-
-        // Update the state
-        setToDate(newToDate);
-        setFromDate(newFromDate);
-    }, [selectedDateOption]);
+    useEffect(() => {loadOrders().then();},[])
 
     useEffect(() => {
-        const loadMoreOrders = async () => {
-            if (loadingOrders || !data) return;
-            setLoadingOrders(true);
-            try {
-                // console.log('in fn ', orders,fromDate,toDate,start)
-                const response = await getBulkOrdersApi(currentPageNumber);
-                setCurrentPageNumber(currentPageNumber + 1)
-                if (response.orders === undefined) {
-                    setNoMoreOrders(true);
-                } else {
-                    setData(prevData => ({
-                        ...prevData,
-                        orders: [...prevData.orders, ...response.orders]
-                    }));
-                }
-            } catch (error) {
-                console.error("Error loading more orders:", error);
-            }
-            setLoadingOrders(false);
-        };
 
         const handleScroll = () => {
             const windowHeight = window.innerHeight;
             const documentHeight = document.documentElement.scrollHeight;
             const scrollTop = window.scrollY || document.documentElement.scrollTop;
             if (windowHeight + scrollTop >= documentHeight - 200 && !noMoreOrders) {
-                loadMoreOrders();
+                loadOrders();
             }
         };
 
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
-    }, [loadingOrders, data, orders, fromDate, toDate]);
+    }, [loadingOrders, data, fromDate, toDate]);
 
-    const fetchData = async () => {
-        setNoMoreOrders(false);
-        setData(null);
-        setLoadingOrders(true);
-
-        // Generate a unique timestamp for this request
-        const requestTimestamp = Date.now();
-
-        try {
-            const result = await getBulkOrdersApi();
-
-            // Check if the response is for the latest request
-            if (requestTimestamp === latestRequestTimestamp.current) {
-                setData(result.data);
-                console.log(result)
-                setCurrentPageNumber(1);
-            }
-        } catch (error) {
-            console.error("Error fetching orders:", error);
-        }
-
-        setLoadingOrders(false);
-    };
-
-
-
-    // Define a ref to store the timestamp of the latest request
-    const latestRequestTimestamp = useRef(null);
-
-
-    useEffect(() => {
-        // Update the latest request timestamp when dependencies change
-        latestRequestTimestamp.current = Date.now();
-        fetchData();
-    }, [orders, toDate, fromDate]);
-
-
-    const loadOrders = () => {
+    const renderOrders = () => {
 
         if (!data || !data.bulkOrders || data.bulkOrders.length === 0) {
             return null;
@@ -168,7 +94,7 @@ const BulkOrders = () => {
                     <input className="searchOrder" placeholder="Search By product name, sku , barcode and hsn code" type="text" />
                     <input className="searchOrder" placeholder="Search by customer name" type="text" />
                     <input className="searchOrder" value={PhoneNumber} placeholder="Search by Mobile" type="text" onChange={(e) => setPhoneNumber(e.target.value)} />
-                    <button className="SearchButton" onClick={fetchData}>SEARCH</button>
+                    <button className="SearchButton" >SEARCH</button>
                 </div>
             </div>
 
@@ -191,7 +117,7 @@ const BulkOrders = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {loadOrders()}
+                        {renderOrders()}
                     </tbody>
                 </table>
                 {noMoreOrders && <p style={{ textAlign: 'center' }}>❌No More Orders</p>}
