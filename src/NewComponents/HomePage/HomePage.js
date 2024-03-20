@@ -145,7 +145,7 @@ export default function MiniDrawer() {
         <Route path="/" element={<Dashboard />} />
         <Route path="/orders" element={<Orders />} />
         <Route path="/products" element={<Products />} />
-        <Route path="/products" element={<Products />} />
+        <Route path="/category" element={<Category />} />
         <Route path="/newProduct" element={<NewProduct />} />
         <Route path="/customers" element={<Customers />} />
         <Route path="/bulkorders" element={<BulkOrders />} />

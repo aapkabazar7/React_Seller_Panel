@@ -45,7 +45,7 @@ export default function DeliveryOfferCard({ item, index }) {
     console.log(product)
   },[product])
   return (
-    <div style={{ backgroundColor: "#eee", padding: 10, borderRadius: 10, width: "100%", alignItems: "center" }}>
+    <div style={{ backgroundColor: "rgb(238 238 238 / 49%)", padding: 10, borderRadius: 10, width: "100%", alignItems: "center" }}>
       <div style={{ flex: 1, display: "flex", flexDirection: "row", marginBottom: 10 }}>
         <div style={{ flex: 0.8 }}>
           <input type="text" defaultValue={product?.name} onChange={searchKeywordHandler} placeholder="Search by Product" style={{ border: "none", backgroundColor: "white", width: "100%", paddingLeft: 5, borderRadius: 8 }} />

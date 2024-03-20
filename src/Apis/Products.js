@@ -1,7 +1,7 @@
 import axios from "axios";
 import { baseURL, headers, pageLimit } from "../config/config";
 
-const fetchProducts = async (categoryId, subCategoryId, leafCategoryId, brandId, page = 0, limit = 10) => {
+const fetchProducts = async (categoryId, subCategoryId, leafCategoryId, brandId,searchKeyword, page = 0, limit = 10) => {
   const urlParams = [`page=${page}`, `limit=${limit}`];
   if (brandId !== null) {
     urlParams.push(`brandId=${brandId}`);
@@ -14,6 +14,9 @@ const fetchProducts = async (categoryId, subCategoryId, leafCategoryId, brandId,
   }
   if (leafCategoryId !== null) {
     urlParams.push(`leafCategoryId=${leafCategoryId}`);
+  }
+  if (searchKeyword !== null && searchKeyword.length >2) {
+    urlParams.push(`keyword=${searchKeyword}`);
   }
 
   const url = `${baseURL}product/stock/list?${urlParams.join("&")}`;
@@ -76,9 +79,7 @@ const updateProductInfo = async (data) => {
 };
 const addNewProductApi = async (page = 0) => {
   try {
-    const res = await axios.get(
-      `
-${baseURL}catalogue/products?page=${page}&limit=${pageLimit}&added=false`,
+    const res = await axios.get(`${baseURL}catalogue/products?page=${page}&limit=${pageLimit}&added=false`,
       headers
     );
     if (res.status === 200) return res.data;

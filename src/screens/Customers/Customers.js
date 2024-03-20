@@ -409,7 +409,7 @@ const Customers = () => {
           </div>
         </div>
 
-        <div className="datatable" style={{ flex: 5, display: "flex", maxWidth: '85vw', overflow: 'clip' }}>
+        <div className="datatable" style={{ flex: 5, display: "flex", overflow: 'clip' }}>
           <table
             cellSpacing={1}
             style={{ border: "1px", width: "100%", overflowY: 'scroll' }}>

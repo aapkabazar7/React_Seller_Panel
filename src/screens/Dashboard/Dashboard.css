@@ -179,7 +179,7 @@ textarea:focus {
   background-color: #4c8bf5;
   border-color: transparent;
   transform: scale(0.8);
-  box-shadow: 0 0 20px #4c8bf580;
+  box-shadow: none;
 }
 
 .radio-button__input:checked + .radio-button__label {
@@ -202,4 +202,53 @@ textarea:focus {
   padding-bottom: 10px;
   padding-left: 8px;
   padding-right: 2px;
+}
+
+.refreshButton {
+  color: white;
+  background-color: #ffef03;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  line-height: 2rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-top: 0.7rem;
+  padding-bottom: 0.7rem;
+  cursor: pointer;
+  text-align: center;
+  margin-right: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 10px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #e3d400;
+  justify-content: center;
+  align-items: center;
+}
+
+.refreshButton:hover {
+  background-color: #ffef03;
+}
+
+.refreshButton svg {
+  display: inline;
+  width: 1.3rem;
+  height: 1.3rem;
+  color: black;
+}
+
+.refreshButton:focus svg {
+  animation: spin_357 0.5s linear;
+}
+
+@keyframes spin_357 {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }

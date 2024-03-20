@@ -6,100 +6,166 @@ import { getOrderSourceReport } from "../../Apis/Dashboard";
 Chart.register(ArcElement);
 
 const SemiDonut = ({ data, setDonutDates, donutDates }) => {
-	return (
-		<div>
-			<Doughnut
-				data={{
-					datasets: [
-						{
-							data: [data.desktop, data.phone, data.tablet],
-							backgroundColor: ["#2d9fec", "#f6ba2a", "red"],
-							display: true,
-							// borderColor: "rgb(227 227 227)"
-						},
-					],
-				}}
-				options={{
-					plugins: {
-						legend: {
-							display: false,
-						},
-						tooltip: {
-							enabled: false,
-						},
-					},
+  const getMonthName = (monthIndex) => {
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    return months[monthIndex];
+  };
 
-					rotation: -90,
-					circumference: 180,
-					cutout: "60%",
-					maintainAspectRatio: true,
-					responsive: true,
-				}}
-			/>
-			<div
-				style={{
-					justifyContent: "flex-start",
-					display: "flex",
-					flexDirection: "column",
-				}}>
-				<div
-					style={{
-						display: "flex",
-						border: "0px solid black",
-						gap: 10,
-						alignItems: "center",
-						flex: 1,
-						textTransform: "capitalize",
-					}}>
-					<div
-						style={{
-							borderRadius: "50%",
-							width: 15,
-							height: 15,
-							backgroundColor: "#2d9fec",
-						}}></div>
-					Order received from {Object.keys(data)[0]} <strong>({Object.values(data)[0]})</strong>
-				</div>
-				<div
-					style={{
-						display: "flex",
-						border: "0px solid black",
-						gap: 10,
-						alignItems: "center",
-						flex: 1, textTransform: "capitalize",
-					}}>
-					<div
-						style={{
-							borderRadius: "50%",
-							width: 15,
-							height: 15,
-							backgroundColor: "#f6ba2a",
-						}}></div>
-					Order received from {Object.keys(data)[1]}
-					<strong>({Object.values(data)[1]})</strong>
-				</div>
-				<div
-					style={{
-						display: "flex",
-						border: "0px solid black",
-						gap: 10,
-						alignItems: "center",
-						flex: 1,
-						textTransform: "capitalize",
-					}}>
-					<div
-						style={{
-							borderRadius: "50%",
-							width: 15,
-							height: 15,
-							backgroundColor: "red",
-						}}></div>
-					Order received from {Object.keys(data)[2]}
-					<strong>({Object.values(data)[2]})</strong>
-				</div>
-			</div>
-		</div>
-	);
+  // Function to generate options for the select dropdown
+  const generateOptions = () => {
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth();
+    const currentYear = currentDate.getFullYear() % 100; // Get last 2 digits of the year
+
+    const options = [];
+    for (let i = 0; i <= 10; i++) {
+      const previousMonthIndex = (currentMonth - i + 12) % 12;
+      let previousYear = currentYear;
+      if (previousMonthIndex > currentMonth) {
+        // If the previous month is in the previous year
+        previousYear = currentYear - 1;
+      }
+      const monthName = getMonthName(previousMonthIndex);
+      options.push({
+        value: `${previousMonthIndex + 1}/${previousYear}`,
+        label: `${monthName} ${previousYear}`,
+      });
+    }
+    return options;
+  };
+
+  const [options] = useState(generateOptions());
+  const [selectedMonth, setSelectedMonth] = useState("");
+  const formatDate = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Month is zero-based
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  const handleChange = (event) => {
+    setSelectedMonth(event.target.value);
+
+    // Splitting month and year and trimming whitespaces
+    const [month, year] = event.target.value.split("/").map((str) => str.trim());
+
+    // Parsing month and adjusting the year
+    const parsedYear = parseInt(year) < 50 ? 2000 + parseInt(year) : 1900 + parseInt(year);
+
+    const fromDate = new Date(parsedYear, parseInt(month) - 1, 1);
+    const toDate = new Date(parsedYear, parseInt(month), 0);
+
+    // Formatting fromDate and toDate to yyyy-mm-dd format
+    const formattedFromDate = formatDate(fromDate);
+    const formattedToDate = formatDate(toDate);
+
+    setDonutDates({ fromDate: formattedFromDate, toDate: formattedToDate });
+  };
+
+  return (
+    <div>
+      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        <select style={{ padding: "10px 5px", borderRadius: 4 }} value={selectedMonth} onChange={handleChange}>
+          {options.map((option, index) => (
+            <option key={index} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+      </div>
+      <Doughnut
+        data={{
+          datasets: [
+            {
+              data: [data.desktop, data.phone, data.tablet],
+              backgroundColor: ["#2d9fec", "#f6ba2a", "red"],
+              display: true,
+              // borderColor: "rgb(227 227 227)"
+            },
+          ],
+        }}
+        options={{
+          plugins: {
+            legend: {
+              display: false,
+            },
+            tooltip: {
+              enabled: false,
+            },
+          },
+
+          rotation: -90,
+          circumference: 180,
+          cutout: "60%",
+          maintainAspectRatio: true,
+          responsive: true,
+        }}
+      />
+      <div
+        style={{
+          justifyContent: "flex-start",
+          display: "flex",
+          flexDirection: "column",
+        }}>
+        <div
+          style={{
+            display: "flex",
+            border: "0px solid black",
+            gap: 10,
+            alignItems: "center",
+            flex: 1,
+            textTransform: "capitalize",
+          }}>
+          <div
+            style={{
+              borderRadius: "50%",
+              width: 15,
+              height: 15,
+              backgroundColor: "#2d9fec",
+            }}></div>
+          Order received from {Object.keys(data)[0]} <strong>({Object.values(data)[0]})</strong>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            border: "0px solid black",
+            gap: 10,
+            alignItems: "center",
+            flex: 1,
+            textTransform: "capitalize",
+          }}>
+          <div
+            style={{
+              borderRadius: "50%",
+              width: 15,
+              height: 15,
+              backgroundColor: "#f6ba2a",
+            }}></div>
+          Order received from {Object.keys(data)[1]}
+          <strong>({Object.values(data)[1]})</strong>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            border: "0px solid black",
+            gap: 10,
+            alignItems: "center",
+            flex: 1,
+            textTransform: "capitalize",
+          }}>
+          <div
+            style={{
+              borderRadius: "50%",
+              width: 15,
+              height: 15,
+              backgroundColor: "red",
+            }}></div>
+          Order received from {Object.keys(data)[2]}
+          <strong>({Object.values(data)[2]})</strong>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default SemiDonut;
