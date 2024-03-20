@@ -44,24 +44,25 @@ export const formatIndian = (str) => {
   if (str?.toString()) return str.toString().replace(/\B(?=(?:(\d\d)+(\d)(?!\d))+(?!\d))/g, ",");
   else return str;
 };
-export function convertTo24Hour(time12h) {
+export const convertTo24Hour = (time) => {
   let hours, minutes, modifier;
 
   // Check if the time string includes "AM" or "PM"
-  if (time12h.includes("AM") || time12h.includes("PM")) {
+  console.log("time", time);
+  if (time.includes("AM") || time.includes("PM")) {
     // Split the time and modifier
-    const timeParts = time12h.match(/^(\d+):(\d+)([AP]M)$/);
+    const timeParts = time.match(/^(\d+):(\d+)([AP]M)$/);
     if (!timeParts) {
       // Invalid time format
-      return "Invalid time format";
+      return "Invalid time format" + time;
     }
     hours = parseInt(timeParts[1]);
     minutes = timeParts[2];
     modifier = timeParts[3];
   } else {
     // If the modifier is not provided, assume it's AM
-    hours = parseInt(time12h.substring(0, 2));
-    minutes = time12h.substring(3, 5);
+    hours = parseInt(time.substring(0, 2));
+    minutes = time.substring(3, 5);
     modifier = "AM";
   }
 
@@ -74,14 +75,14 @@ export function convertTo24Hour(time12h) {
   }
 
   return `${hours}:${minutes}`;
-}
+};
 
 export function convertToAMPM(time24h) {
   let [hours, minutes] = time24h.split(":");
   hours = parseInt(hours, 10);
   const modifier = hours >= 12 ? "PM" : "AM";
   hours = hours % 12 || 12;
-  return `${hours}:${minutes} ${modifier}`;
+  return `${hours}:${minutes}${modifier}`;
 }
 
 export function decodeMinutesToTime(minutes) {
@@ -95,6 +96,20 @@ export function decodeMinutesToTime(minutes) {
   const formattedMinutes = (minutesRemaining < 10 ? "0" : "") + minutesRemaining;
 
   return `${formattedHours}:${formattedMinutes}`;
+}
+
+export function encodeTimeToMinutes(timeString) {
+  // Split the time string into hours and minutes
+  const [hoursStr, minutesStr] = timeString.split(":");
+
+  // Parse hours and minutes as integers
+  const hours = parseInt(hoursStr, 10);
+  const minutes = parseInt(minutesStr, 10);
+
+  // Calculate total minutes
+  const totalMinutes = hours * 60 + minutes;
+
+  return totalMinutes;
 }
 
 // Dummy data
