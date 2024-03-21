@@ -41,6 +41,7 @@ import OrderDetails from "../../screens/OrderDetails/OrderDetails";
 import Dashboard from "../../screens/Dashboard/Dashboard";
 import DeliveryCharge from "../../screens/DeliveryCharges/DeliveryCharge";
 import NewProduct from "../../screens/NewProduct/NewProduct";
+import NewDeliveryCharge from "../../screens/New_Delivery_Charge/NewDeliveryCharge";
 
 const drawerWidth = 240;
 
