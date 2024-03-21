@@ -233,12 +233,8 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    fetchData().then();
     getOrderData().then();
     getCardDataSet().then();
-    getGraphs("monthly").then();
-    getTopProductData().then();
-    getDonutData().then();
     getStockData().then();
   }, []);
 
@@ -389,17 +385,18 @@ const Dashboard = () => {
             <button
               ref={refreshRef}
               onClick={async () => {
-                // setLoading({
-                //   cardsLoading: true,
-                //   annualLoading: true,
-                //   donutLoading: true,
-                //   orderWiseLoading: true,
-                //   stockWiseLoading: true,
-                //   topProductLoading: true,
-                //   topCategoryLoading: true,
-                //   topBrandLoading: true,
-                // });
                 const result = await refreshData();
+                setLoading({
+                  cardsLoading: true,
+                  annualLoading: true,
+                  donutLoading: true,
+                  orderWiseLoading: true,
+                  stockWiseLoading: true,
+                  topProductLoading: true,
+                  topCategoryLoading: true,
+                  topBrandLoading: true,
+                });
+                
                 if (result.success) {
                   toast.success("Data refreshed");
                 }

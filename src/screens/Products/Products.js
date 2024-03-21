@@ -20,7 +20,7 @@ const Products = () => {
   const [searchKeyword,setSearchKeyword] = useState("");
 
   const getData = async () => {
-    if (!loadingProducts) {
+    if (!loadingProducts && noMoreProducts === false) {
       setLoadingProducts(true);
       try {
         const result = await fetchProducts(selectedCategoryId, selectedSubCategoryID, selectedLeafCategoryId, selectedbrandId, searchKeyword, page);

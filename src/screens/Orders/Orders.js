@@ -271,8 +271,6 @@ const Orders = () => {
         </div>
         <div id="filterNav">
           <p>Filters</p>
-          <input className="searchOrder" placeholder="Search By product name, sku , barcode and hsn code" type="text" />
-          <input className="searchOrder" placeholder="Search by customer name" type="text" />
           <input className="searchOrder" value={PhoneNumber} placeholder="Search by Mobile" type="text" onChange={(e) => setPhoneNumber(e.target.value)} />
           <button
             onClick={fetchData}

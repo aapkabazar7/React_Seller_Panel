@@ -41,6 +41,7 @@ import OrderDetails from "../../screens/OrderDetails/OrderDetails";
 import Dashboard from "../../screens/Dashboard/Dashboard";
 import DeliveryCharge from "../../screens/DeliveryCharges/DeliveryCharge";
 import NewProduct from "../../screens/NewProduct/NewProduct";
+import { Logout } from "@mui/icons-material";
 
 const drawerWidth = 240;
 
@@ -172,25 +173,28 @@ export default function MiniDrawer() {
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
       <AppBar elevation={0} position="fixed" open={open}>
-        <Toolbar style={{ backgroundColor: "white" }}>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{
-              marginRight: 5,
-              color: "#696969",
-              boxShadow: "none",
-              ...(open && { display: "none" }),
-            }}>
-            <MenuIcon />
-          </IconButton>
-          <img style={{ height: 40, width: 40 }} src={logo} id="logo" alt="AkbLogo" />
-          <div style={{ width: 20 }} />
-          <Typography color={"black"} variant="h6" noWrap component="div">
-            Seller Panel <strong>AKB</strong>
-          </Typography>
+        <Toolbar style={{ backgroundColor: "white", justifyContent: 'space-between' }}>
+          <div style={{display: 'flex'}}>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              edge="start"
+              sx={{
+                marginRight: 5,
+                color: "#696969",
+                boxShadow: "none",
+                ...(open && { display: "none" }),
+              }}>
+              <MenuIcon />
+            </IconButton>
+            <img style={{ height: 40, width: 40 }} src={logo} id="logo" alt="AkbLogo" />
+            <div style={{ width: 20 }} />
+            <Typography color={"black"} variant="h6" noWrap component="div">
+              Seller Panel <strong>AKB</strong>
+            </Typography>
+          </div>
+          <button style={{ cursor: "pointer", backgroundColor : '#00000005' , border: '1px solid #0000001A', padding : '12px 25px', borderRadius: '15px' }} onClick={() => {localStorage.removeItem('token'); window.location.reload();}} >Logout</button>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
