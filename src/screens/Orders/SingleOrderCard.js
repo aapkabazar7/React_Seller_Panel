@@ -1,5 +1,14 @@
 import { useState } from "react";
-import { cancelOrder, confirmPendingOrder, deliverOrderApi, dispatchProcessedOrder, getOrders, orderDetailsApi, processConfirmedOrder, restoreOrderApi } from "../../Apis/orders";
+import {
+  cancelOrder,
+  confirmPendingOrder,
+  deliverOrderApi,
+  dispatchProcessedOrder,
+  getOrders,
+  orderDetailsApi,
+  processConfirmedOrder,
+  restoreOrderApi,
+} from "../../Apis/orders";
 import { Navigate, useNavigate } from "react-router-dom";
 import { printInvoice } from "../../utils/toast";
 import { toast } from "react-toastify";
@@ -12,7 +21,7 @@ const SingleOrderCard = ({ item, index, fetchData, setData, currentPage, setCurr
     latestRequestTimestamp.current = Date.now();
     setCurrentPageNumber(0);
     setData([]);
-    fetchData().then();
+    // fetchData().then();
   }
 
   const acceptPendingOrder = async (id) => {
