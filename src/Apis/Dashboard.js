@@ -69,8 +69,8 @@ const getProductCount = async () => {
   }
 };
 
-const getTopProduct = async () => {
-  const url = `${baseURL}dashboard/topProducts`;
+const getTopProduct = async (startDate, endDate) => {
+  const url = `${baseURL}dashboard/topProducts?startDate=${startDate}&endDate=${endDate}`;
 
   try {
     const response = await axios.get(url, {
