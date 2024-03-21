@@ -2,9 +2,9 @@ import axios from "axios";
 import { baseURL } from "../config/config";
 const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxN2QyOTgyYmQ2OGM5NGQwYmNiOTIwMCIsInBob25lTm8iOjg3ODc4Nzg3ODcsImVtYWlsIjoiYWFwa2FiYXphcnNlbGxlckBnbWFpbC5jb20iLCJpYXQiOjE3MDc0ODkwMzN9.NziQ8vjNz5y42pFtsq6739vo7GwOVuOzVsX0hcFrq0Q'
 
-const getOrders = async (type, startDate, EndDate, PhoneNumber, start = 0, end = 10) => {
+const getOrders = async (type, startDate, EndDate, PhoneNumber, page = 1, limit = 10) => {
 
-    var url = `${baseURL}/order/v2/getOrders?start=${start}&end=${end}`;
+    var url = `${baseURL}/order/v2/getOrders?page=${page}&limit=${limit}`;
 
     try {
         const response = await axios.post(
