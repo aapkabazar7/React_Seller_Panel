@@ -5,7 +5,6 @@ import moment from "moment";
 import "jspdf/dist/polyfills.es.js";
 import "react-toastify/dist/ReactToastify.css";
 import Barcode from "react-barcode";
-import { canvg } from "canvg";
 
 // toast.configure()
 

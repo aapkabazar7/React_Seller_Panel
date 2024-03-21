@@ -149,22 +149,22 @@ const Products = () => {
               <span style={{ fontSize: 24, fontWeight: "bolder" }}>Filter</span>
             </div>
             <select
-              style={{ flex: 1, borderRadius: 10, textAlign: "center" }}
+              style={{ flex: 1, borderRadius: 10, textAlign: "center", border: '1px solid #eee' }}
               onChange={(event) => {
                 handleSetCategory(event.target.value);
               }}>
               <option value="">Category</option>
               {mapCategories()}
             </select>
-            <select style={{ flex: 1, borderRadius: 10, textAlign: "center" }} onChange={(event) => handleSetSubCategory(event.target.value)}>
+            <select style={{ flex: 1, borderRadius: 10, textAlign: "center" , border: '1px solid #eee'}} onChange={(event) => handleSetSubCategory(event.target.value)}>
               <option value="">Sub Category</option>
               {selectedCategoryId !== null ? mapSubCategories() : <></>}
             </select>
-            <select style={{ flex: 1, borderRadius: 10, textAlign: "center" }} onChange={(event) => setSelectedLeafCategoryId(event.target.value)}>
+            <select style={{ flex: 1, borderRadius: 10, textAlign: "center", border: '1px solid #eee' }} onChange={(event) => setSelectedLeafCategoryId(event.target.value)}>
               <option value="">Leaf Category</option>
               {selectedSubCategoryID !== null ? mapLeafCategories() : <></>}
             </select>
-            <select style={{ flex: 1, borderRadius: 10, textAlign: "center" }}>
+            <select style={{ flex: 1, borderRadius: 10, textAlign: "center", border: '1px solid #eee' }}>
               <option value="today">Brands</option>
               {brandName !== null ? mapBrandNames() : <></>}
             </select>
@@ -214,14 +214,14 @@ const Products = () => {
         </div>
         <div style={{ flex: 1, display: "flex", flexDirection: "row", gap: 20 }}>
           <div style={{ flex: 0.6, display: "flex", gap: 20 }}>
-            <input style={{ flex: 5, paddingLeft: 10 }} placeholder="Search by Product Name,BarCode, SKU and HSN" onBlur={(e)=>{setSearchKeyword(e.target.value)}}/>
-            <select style={{ flex: 1, borderRadius: 10, textAlign: "center" }}>
+            <input style={{ flex: 5, paddingLeft: 10, border: '1px solid #eee' }} placeholder="Search by Product Name,BarCode, SKU and HSN" onBlur={(e)=>{setSearchKeyword(e.target.value)}}/>
+            <select style={{ flex: 1, borderRadius: 10, textAlign: "center" , border: '1px solid #eee'}}>
               <option value="all">All</option>
               <option value="active">Active</option>
               <option value="inactive">Inactive</option>
               <option value="custom">Custom</option>
             </select>
-            <select style={{ flex: 1, borderRadius: 10, textAlign: "center" }}>
+            <select style={{ flex: 1, borderRadius: 10, textAlign: "center" , border: '1px solid #eee' }}>
               <option value="today">Sort By A-Z</option>
               <option value="yesterday">Sort by Z-A</option>
             </select>

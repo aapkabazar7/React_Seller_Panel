@@ -17,7 +17,7 @@ const Orders = () => {
   const [orderCount, setOrderCount] = useState();
   const [loadingOrders, setLoadingOrders] = useState(false);
   const [noMoreOrders, setNoMoreOrders] = useState(false);
-  const [currentPageNumber, setCurrentPageNumber] = useState(0);
+  const [currentPageNumber, setCurrentPageNumber] = useState(1);
   const [PhoneNumber, setPhoneNumber] = useState("");
 
   const handleButtonClick = (orderType) => {
@@ -122,14 +122,15 @@ const Orders = () => {
     setData(null);
     setLoadingOrders(true);
     const requestTimestamp = Date.now();
+    console.log("reqeust time " , requestTimestamp)
     try {
       const result = await getOrders(orders, fromDate, toDate, PhoneNumber);
-      if (requestTimestamp === latestRequestTimestamp.current) {
+      if (Math.abs(requestTimestamp - latestRequestTimestamp.current) <= 50) {
         if (!result.success) {
           setNoMoreOrders(true);
         } else {
           setData(result);
-          setCurrentPageNumber(1);
+          setCurrentPageNumber(2);
         }
       } else {
         console.log("validation failed", result);
@@ -147,6 +148,7 @@ const Orders = () => {
   const latestRequestTimestamp = useRef(null);
   useEffect(() => {
     latestRequestTimestamp.current = Date.now();
+    console.log("current time " , latestRequestTimestamp.current)
     setCurrentPageNumber(0);
     setData([]);
     fetchData().then();
@@ -197,6 +199,7 @@ const Orders = () => {
                 }}
                 type="date"
                 value={fromDate}
+                label="Start Date"
                 onChange={(e) => {
                   setFromDate(e.target.value);
                 }}

@@ -9,8 +9,14 @@ import { Bar, Doughnut } from "react-chartjs-2";
 import { formatIndian, printInvoice } from "../../utils/toast";
 import MonthlyChart from "./AnnualChart";
 import { toast } from "react-toastify";
+import { formatDate, generateOptions } from "../../utils/DateHandler";
 
 const Dashboard = () => {
+  const [options] = useState(generateOptions());
+  const [selectedMonthForTopProd, setSelectedMonthForTopProd] = useState("");
+  const [startDateTopProd, setStartDateTopProd] = useState("2024-02-01");
+  const [endDateTopProd, setEndDateTopProd] = useState("2024-02-28");
+
   const [fromDate, setFromDate] = useState("");
   const [topProducts, setTopProducts] = useState([]);
   const [toDate, setToDate] = useState("");
@@ -107,7 +113,7 @@ const Dashboard = () => {
 
   const getTopProductData = async () => {
     try {
-      const res = await getTopProduct();
+      const res = await getTopProduct(startDateTopProd, endDateTopProd);
       if (res && res.success) {
         setTopProducts(res.products);
         setLoading((e) => ({ ...e, topProductLoading: false }));
@@ -221,6 +227,26 @@ const Dashboard = () => {
     getDonutData().then();
   }, [donutDates]);
 
+  useEffect(()=>{
+    getTopProductData().then();
+  }, [ startDateTopProd])
+
+
+  const handleMonthChangeForTopProd = (event) => {
+    setSelectedMonthForTopProd(event.target.value);
+    console.log(event.target.value);  
+    const [month, year] = event.target.value.split("/").map((str) => str.trim());
+    const parsedYear = parseInt(year) < 50 ? 2000 + parseInt(year) : 1900 + parseInt(year);
+
+    const fromDate = new Date(parsedYear, parseInt(month) - 1, 1);
+    const toDate = new Date(parsedYear, parseInt(month), 0);
+
+    const formattedFromDate = formatDate(fromDate);
+    const formattedToDate = formatDate(toDate);
+
+    setStartDateTopProd(formattedFromDate);
+    setEndDateTopProd(formattedToDate);
+  };
   return (
     <div
       style={{
@@ -424,7 +450,7 @@ const Dashboard = () => {
       <div
         id="firstContainer"
         style={{
-          marginTop: 10,
+          marginTop: 20,
         }}>
         {loading.annualLoading ? (
           <Skeleton
@@ -472,10 +498,10 @@ const Dashboard = () => {
           flexDirection: "row",
           display: "flex",
           flex: 1,
-          marginBottom: 15,
+          marginBottom: 20,
           justifyContent: "space-between",
-          marginTop: 15,
-          gap: 10,
+          marginTop: 20,
+          gap: 20,
         }}>
         {loading.orderWiseLoading ? (
           <Skeleton
@@ -559,7 +585,16 @@ const Dashboard = () => {
           />
         ) : (
           <div style={{ height: 400, overflow: "hidden", backgroundColor: "white", borderRadius: 8, padding: "5px 0 10px 17px" }}>
-            <h4>Top Products</h4>
+            <div style={{display: 'flex', flex: 1, justifyContent: 'space-between', margin: '10px 25px 10px 0px', alignItems : 'center'}}>
+              <h3 style={{margin: 0}}>Top Products</h3>
+              <select style={{ padding: "10px 5px", borderRadius: 8, border: '1px solid #eee' }} value={selectedMonthForTopProd} onChange={handleMonthChangeForTopProd}>
+                {options.map((option, index) => (
+                  <option key={index} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
             <div
               className=""
               style={{
@@ -572,6 +607,7 @@ const Dashboard = () => {
                 flexDirection: "column",
                 maxHeight: 400,
                 overflowY: "scroll",
+                paddingBottom: 10
               }}>
               <div className="statCard2">
                 {topProducts?.map((a, index) => (

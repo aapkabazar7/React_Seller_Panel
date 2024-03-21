@@ -166,9 +166,6 @@ const Category = () => {
               </label>
             </div>
             {subCategoryItem ? renderLeafCategories() : <></>}
-            <div className="SaveBtnDiv">
-              <button className="SaveBtn">Save </button>
-            </div>
           </div>
         </div>
       </div>
