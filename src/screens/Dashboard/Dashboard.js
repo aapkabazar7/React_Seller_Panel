@@ -56,7 +56,7 @@ const Dashboard = () => {
     const result = await getOrderSourceReport(donutDates.fromDate, donutDates.toDate);
     let temp = [];
     if (result.success === false) {
-      toast.error("Error fetching donut data");
+      toast.error("Error fetching Device reports");
     } else {
       result.users.forEach((element) => {
         temp[element._id] = element.count;
