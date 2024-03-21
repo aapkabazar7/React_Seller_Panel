@@ -2,7 +2,16 @@ import React, { useEffect } from "react";
 import "./Dashboard.css";
 import { useState } from "react";
 import Reports from "./Reports";
-import { getCardData, getDashboardDetails, getGraphData, getOrderSourceReport, getOrderWiseReport, getProductCount, getTopProduct, refreshData } from "../../Apis/Dashboard";
+import {
+  getCardData,
+  getDashboardDetails,
+  getGraphData,
+  getOrderSourceReport,
+  getOrderWiseReport,
+  getProductCount,
+  getTopProduct,
+  refreshData,
+} from "../../Apis/Dashboard";
 import SemiDonut from "./SemiDonut";
 import { Divider, Skeleton } from "@mui/material";
 import { Bar, Doughnut } from "react-chartjs-2";
@@ -11,20 +20,23 @@ import MonthlyChart from "./AnnualChart";
 import { toast } from "react-toastify";
 import { formatDate, generateOptions } from "../../utils/DateHandler";
 
+const FirstofCurrentMonth = new Date().getFullYear() + "-" + (new Date().getMonth() + 1).toString().padStart(2, "0") + "-01";
+const todaysDate = new Date().getFullYear() + "-" + (new Date().getMonth() + 1).toString().padStart(2, "0") + "-" + new Date().getDate();
+
 const Dashboard = () => {
   const [options] = useState(generateOptions());
   const [selectedMonthForTopProd, setSelectedMonthForTopProd] = useState("");
-  const [startDateTopProd, setStartDateTopProd] = useState("2024-02-01");
-  const [endDateTopProd, setEndDateTopProd] = useState("2024-02-28");
+  const [startDateTopProd, setStartDateTopProd] = useState(FirstofCurrentMonth);
+  const [endDateTopProd, setEndDateTopProd] = useState(todaysDate);
 
-  const [fromDate, setFromDate] = useState("");
+  const [fromDate, setFromDate] = useState(todaysDate);
   const [topProducts, setTopProducts] = useState([]);
-  const [toDate, setToDate] = useState("");
+  const [toDate, setToDate] = useState(todaysDate);
   const [stockData, setStockData] = useState();
   const [orderWiseData, setOrderWiseData] = useState();
   const [donutDates, setDonutDates] = useState({
-    fromDate: "2024-01-15",
-    toDate: "2024-02-15",
+    fromDate: FirstofCurrentMonth,
+    toDate: todaysDate,
   });
   const refreshRef = React.useRef();
   const [donutData, setDonutData] = useState([]);
@@ -44,7 +56,7 @@ const Dashboard = () => {
     const result = await getOrderSourceReport(donutDates.fromDate, donutDates.toDate);
     let temp = [];
     if (result.success === false) {
-      toast.error("Error fetching donut data");
+      toast.error("Error fetching Device reports");
     } else {
       result.users.forEach((element) => {
         temp[element._id] = element.count;
@@ -60,7 +72,7 @@ const Dashboard = () => {
 
   const getCardDataSet = async () => {
     try {
-      const res = await getCardData("2024-02-10", "2024-02-20");
+      const res = await getCardData(fromDate, toDate);
       if (res) {
         setLoading((e) => ({ ...e, cardsLoading: false }));
         setCardData(res?.data?.report);
@@ -158,7 +170,14 @@ const Dashboard = () => {
           labels: ["Cancelled Orders", "New Orders", "Dispatched Orders", "Processed Orders", "Confirmed Orders", "Delivered Orders"],
           datasets: [
             {
-              data: [getCount(orderCount, "cancelled"), getCount(orderCount, "pending"), getCount(orderCount, "dispatched"), getCount(orderCount, "processed"), getCount(orderCount, "confirmed"), getCount(orderCount, "delivered")],
+              data: [
+                getCount(orderCount, "cancelled"),
+                getCount(orderCount, "pending"),
+                getCount(orderCount, "dispatched"),
+                getCount(orderCount, "processed"),
+                getCount(orderCount, "confirmed"),
+                getCount(orderCount, "delivered"),
+              ],
               backgroundColor: ["#e14f64", "#dda12c", "#846dd4", "#198ae0", "#ff96d5", "#19df9c"],
               hoverBackgroundColor: ["#e14f64", "#dda12c", "#846dd4", "#198ae0", "#ff96d5", "#19df9c"],
             },
@@ -227,14 +246,13 @@ const Dashboard = () => {
     getDonutData().then();
   }, [donutDates]);
 
-  useEffect(()=>{
+  useEffect(() => {
     getTopProductData().then();
-  }, [ startDateTopProd])
-
+  }, [startDateTopProd]);
 
   const handleMonthChangeForTopProd = (event) => {
     setSelectedMonthForTopProd(event.target.value);
-    console.log(event.target.value);  
+    console.log(event.target.value);
     const [month, year] = event.target.value.split("/").map((str) => str.trim());
     const parsedYear = parseInt(year) < 50 ? 2000 + parseInt(year) : 1900 + parseInt(year);
 
@@ -316,7 +334,9 @@ const Dashboard = () => {
               }}
               type="date"
               value={fromDate}
-              onChange={setFromDate}
+              onChange={(e) => {
+                setFromDate(e.target.value);
+              }}
               className="date-picker-input"
               placeholder="Start date"
             />
@@ -352,7 +372,9 @@ const Dashboard = () => {
               }}
               type="date"
               value={toDate}
-              onChange={setToDate}
+              onChange={(e) => {
+                setToDate(e.target.value);
+              }}
               className="date-picker-input"
               placeholder="Start date"
             />
@@ -387,10 +409,19 @@ const Dashboard = () => {
               className="refreshButton">
               <svg xmlns="http://www.w3.org/2000/svg" width={16} height={16} fill="currentColor" className="bi bi-arrow-repeat" viewBox="0 0 16 16">
                 <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z" />
-                <path fillRule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z" />
+                <path
+                  fillRule="evenodd"
+                  d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"
+                />
               </svg>
             </button>
             <button
+              onClick={() => {
+                setLoading((e) => {
+                  return { ...e, cardsLoading: true };
+                });
+                getCardDataSet().then();
+              }}
               style={{
                 backgroundColor: "#ffef03",
                 padding: "10px 30px",
@@ -474,7 +505,14 @@ const Dashboard = () => {
               display: "flex",
               flexDirection: "column",
             }}>
-            <MonthlyChart chartData={chartData} setChartData={setChartData} chartDuration={chartDuration} setChartDuration={setChartDuration} selectedOption={selectedOption} handleOptionChange={handleOptionChange} />
+            <MonthlyChart
+              chartData={chartData}
+              setChartData={setChartData}
+              chartDuration={chartDuration}
+              setChartDuration={setChartDuration}
+              selectedOption={selectedOption}
+              handleOptionChange={handleOptionChange}
+            />
           </div>
         )}
         {loading.donutLoading ? (
@@ -585,9 +623,12 @@ const Dashboard = () => {
           />
         ) : (
           <div style={{ height: 400, overflow: "hidden", backgroundColor: "white", borderRadius: 8, padding: "5px 0 10px 17px" }}>
-            <div style={{display: 'flex', flex: 1, justifyContent: 'space-between', margin: '10px 25px 10px 0px', alignItems : 'center'}}>
-              <h3 style={{margin: 0}}>Top Products</h3>
-              <select style={{ padding: "10px 5px", borderRadius: 8, border: '1px solid #eee' }} value={selectedMonthForTopProd} onChange={handleMonthChangeForTopProd}>
+            <div style={{ display: "flex", flex: 1, justifyContent: "space-between", margin: "10px 25px 10px 0px", alignItems: "center" }}>
+              <h3 style={{ margin: 0 }}>Top Products</h3>
+              <select
+                style={{ padding: "10px 5px", borderRadius: 8, border: "1px solid #eee" }}
+                value={selectedMonthForTopProd}
+                onChange={handleMonthChangeForTopProd}>
                 {options.map((option, index) => (
                   <option key={index} value={option.value}>
                     {option.label}
@@ -607,7 +648,7 @@ const Dashboard = () => {
                 flexDirection: "column",
                 maxHeight: 400,
                 overflowY: "scroll",
-                paddingBottom: 10
+                paddingBottom: 10,
               }}>
               <div className="statCard2">
                 {topProducts?.map((a, index) => (
