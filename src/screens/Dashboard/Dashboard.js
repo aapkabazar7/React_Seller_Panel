@@ -20,28 +20,23 @@ import MonthlyChart from "./AnnualChart";
 import { toast } from "react-toastify";
 import { formatDate, generateOptions } from "../../utils/DateHandler";
 
+const FirstofCurrentMonth = new Date().getFullYear() + "-" + (new Date().getMonth() + 1).toString().padStart(2, "0") + "-01";
+const todaysDate = new Date().getFullYear() + "-" + (new Date().getMonth() + 1).toString().padStart(2, "0") + "-" + new Date().getDate();
+
 const Dashboard = () => {
   const [options] = useState(generateOptions());
   const [selectedMonthForTopProd, setSelectedMonthForTopProd] = useState("");
-  const [startDateTopProd, setStartDateTopProd] = useState(
-    new Date().getFullYear() + "-" + (new Date().getMonth() + 1).toString().padStart(2, "0") + "-01"
-  );
-  const [endDateTopProd, setEndDateTopProd] = useState(
-    new Date().getFullYear() + "-" + (new Date().getMonth() + 1).toString().padStart(2, "0") + "-" + new Date().getDate()
-  );
+  const [startDateTopProd, setStartDateTopProd] = useState(FirstofCurrentMonth);
+  const [endDateTopProd, setEndDateTopProd] = useState(todaysDate);
 
-  const [fromDate, setFromDate] = useState(
-    new Date().getFullYear() + "-" + (new Date().getMonth() + 1).toString().padStart(2, "0") + "-" + new Date().getDate()
-  );
+  const [fromDate, setFromDate] = useState(todaysDate);
   const [topProducts, setTopProducts] = useState([]);
-  const [toDate, setToDate] = useState(
-    new Date().getFullYear() + "-" + (new Date().getMonth() + 1).toString().padStart(2, "0") + "-" + new Date().getDate()
-  );
+  const [toDate, setToDate] = useState(todaysDate);
   const [stockData, setStockData] = useState();
   const [orderWiseData, setOrderWiseData] = useState();
   const [donutDates, setDonutDates] = useState({
-    fromDate: "2024-01-15",
-    toDate: "2024-02-15",
+    fromDate: FirstofCurrentMonth,
+    toDate: todaysDate,
   });
   const refreshRef = React.useRef();
   const [donutData, setDonutData] = useState([]);
