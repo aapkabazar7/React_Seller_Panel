@@ -22,7 +22,7 @@
 }
 .searchOrder
 {
-    width: fit-content;
+    width: 200px;
     display: flex;
     flex: 1;
     border-radius: 12px;

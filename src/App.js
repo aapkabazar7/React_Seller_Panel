@@ -9,9 +9,13 @@ function App() {
     <Router>
       <div style={{ backgroundColor: "#F3F9F7", width: "100%", height: "100%" }}>
         {/* <LeftPanel /> */}
-        <MiniDrawer />
-        {/* <Login /> */}
-
+        {
+          localStorage.getItem("token") === null ?
+            <Login /> :
+            <>
+              <MiniDrawer />
+            </>
+        }
         <ToastContainer stacked />
       </div>
     </Router>
