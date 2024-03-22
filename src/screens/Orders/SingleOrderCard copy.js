@@ -26,19 +26,13 @@ function formatTo12HourTime(isoString) {
 }
 
 function calculateTimeDifference(date1, date2) {
-  // Parse the strings into Date objects
+  if (!date1 || !date2) return "";
   const d1 = new Date(date1);
   const d2 = new Date(date2);
-
-  // Calculate the difference in milliseconds
   const differenceMs = Math.abs(d1 - d2);
-
-  // Calculate days, hours, and minutes
   const days = Math.floor(differenceMs / (1000 * 60 * 60 * 24));
   const hours = Math.floor((differenceMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
   const minutes = Math.floor((differenceMs % (1000 * 60 * 60)) / (1000 * 60));
-
-  // Construct the formatted time difference string
   let formattedDifference = "";
   if (days > 0) {
     formattedDifference += `${days}d `;
@@ -47,7 +41,7 @@ function calculateTimeDifference(date1, date2) {
     formattedDifference += `${hours}h `;
   }
   formattedDifference += `${minutes}m`;
-
+  console.log("Calculating for", date1, date2, formattedDifference);
   return formattedDifference;
 }
 const SingleOrderCard = ({ item, index, fetchData, setData, currentPage, setCurrentPageNumber, latestRequestTimestamp }) => {
@@ -64,13 +58,12 @@ const SingleOrderCard = ({ item, index, fetchData, setData, currentPage, setCurr
     {
       title: "Placed",
       status: "pending",
-      value: formatTo12HourTime(item.date),
-      diff: calculateTimeDifference(item.date, item.confirmedStateTime ? item.confirmedStateTime : new Date()),
+      value: item.date,
     },
-    { title: "Checking", status: "confirmed", value: formatTo12HourTime(item.confirmedStateTime), diff: "5m " },
-    { title: "Processed", status: "processed", value: formatTo12HourTime(item.processedStateTime), diff: "10m " },
-    { title: "Dispatched", status: "dispatched", value: formatTo12HourTime(item.dispatchedStateTime), diff: "5m " },
-    { title: "Delivered", status: "delivered", value: formatTo12HourTime(item.deliveredDate), diff: "20m " },
+    { title: "Checking", status: "confirmed", value: item.confirmedStateTime },
+    { title: "Processed", status: "processed", value: item.processedStateTime },
+    { title: "Dispatched", status: "dispatched", value: item.dispatchedStateTime },
+    { title: "Delivered", status: "delivered", value: item.deliveredDate },
   ];
 
   const acceptPendingOrder = async (id) => {
@@ -246,13 +239,71 @@ const SingleOrderCard = ({ item, index, fetchData, setData, currentPage, setCurr
         return null;
     }
   };
+
+  const renderStatus = (item) => {
+    switch (item.status) {
+      case "pending":
+        return (
+          <>
+            <p className="blacktext">Pending</p>
+          </>
+        );
+      case "confirmed":
+        return (
+          <>
+            <p className="blacktext">Confirmed</p>
+          </>
+        );
+      case "processed":
+        return (
+          <>
+            <p className="blacktext">Processed</p>
+          </>
+        );
+      case "dispatched":
+        return (
+          <>
+            <input className="otpInputBox" value={otp} placeholder="Enter Otp" onChange={(e) => setOtp(e.target.value)} />
+            <span className="blacktext" style={{ textAlign: "center" }}>
+              OTP : {item.otp}
+            </span>
+          </>
+        );
+      case "cancelled":
+        return (
+          <>
+            <p className="blacktext">{item.userCancelStatus === true ? "Cancelled By User" : "Cancelled By Admin"}</p>
+          </>
+        );
+      case "delivered":
+        return (
+          <>
+            <p className="blacktext">Delivered</p>
+          </>
+        );
+      default:
+        return null;
+    }
+  };
+
+  function renderDifferences(index) {
+    if (index - 1 <= 0) return null; // No differences for the first item
+
+    const currentItem = data[index - 1];
+    const previousItem = data[index - 2];
+
+    const timeDifference = calculateTimeDifference(currentItem.value, previousItem.value);
+
+    return <span>{timeDifference}</span>;
+  }
+
   return (
     <div
       style={{
         marginTop: 10,
         marginBottom: 10,
         boxShadow: "0px 0px 10px #ccc",
-        padding: 10,
+        padding: 20,
         borderRadius: 10,
       }}>
       <div
@@ -261,50 +312,75 @@ const SingleOrderCard = ({ item, index, fetchData, setData, currentPage, setCurr
           flex: 1,
           flexDirection: "row",
           justifyContent: "center",
+          alignItems: "flex-start",
           gap: 20,
+          marginBottom: 10,
         }}>
         <div className="CELL 1" style={{ display: "flex", flexDirection: "column", flex: 1 }}>
-          <h6 style={{}}>{formatDate(item.date)}</h6>
+          <p style={{}} className="greytext">
+            Order Id
+          </p>
+          <p style={{}}>{item.id}</p>
+        </div>
+        <div className="CELL 1" style={{ display: "flex", flexDirection: "column", flex: 1 }}>
+          <p style={{}} className="greytext">
+            Order Date
+          </p>
+          <p style={{}}>{formatDate(item.date)}</p>
         </div>
 
-        <div className="CELL 2" style={{ display: "flex", flexDirection: "column", flex: 1 }}>
-          <h6 style={{}}>{formatDate(item.deliveryDate)}</h6>
-          <h6 style={{}}>{item.deliveryTime?.slot}</h6>
+        <div className="CELL 2" style={{ display: "flex", flexDirection: "column", flex: 2 }}>
+          <p style={{}} className="greytext">
+            Time and Slot
+          </p>
+          <p style={{}}>{formatDate(item.deliveryDate)}</p>
+          <p style={{ fontWeight: "bold" }}>{item.deliveryTime?.slot}</p>
         </div>
 
         <div className="CELL 3" style={{ display: "flex", flexDirection: "column", flex: 5 }}>
+          <p style={{}} className="greytext">
+            Address
+          </p>
           <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
-            <p style={{}}>
-              {item.address?.line1} {item.address?.line2}
-            </p>
-          </div>
-
-          <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
-            <span style={{ fontWeight: "normal", textAlign: "left", textTransform: "capitalize" }}>
+            <span style={{ fontWeight: "bold", textAlign: "left", fontSize: 18, textTransform: "capitalize" }}>
               {item.address?.name} {item.address?.mobileNo}
             </span>
           </div>
-        </div>
-        {/* <div className="CELL 4" style={{ display: "flex", flexDirection: "column", flex: 2, justifyContent: "center", alignItems: "center" }}>
-          {renderStatus(item)}
-        </div> */}
-        <div className="CELL 5" style={{ display: "flex", flexDirection: "row", flex: 2 }}>
-          <div style={{}}>
-            <p style={{ textTransform: "capitalize" }}>Payment Mode</p>
-            <p style={{}}>Order Amount</p>
-          </div>
-
           <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
-            <p style={{ textTransform: "capitalize" }}>{item.paymentMode}</p>
-            <p style={{}}>₹ {item.amount}</p>
+            <p style={{ textTransform: "capitalize" }}>
+              {item.address?.line1} {item.address?.line2} <span style={{ fontWeight: "bold" }}> -{item.address?.pincode}</span>
+            </p>
           </div>
+        </div>
+
+        <div className="CELL 5" style={{ display: "flex", flexDirection: "row", flex: 1 }}>
+          <div style={{}}>
+            <p style={{}} className="greytext">
+              Payment
+            </p>
+            <p style={{ textTransform: "capitalize" }}>Mode: {item.paymentMode} </p>
+            <p style={{ color: "black", fontWeight: "bold" }}>₹ {item.amount}</p>
+          </div>
+        </div>
+        <div className="CELL 4" style={{ display: "flex", flexDirection: "column", flex: 1, justifyContent: "flex-start", alignItems: "flex-start" }}>
+          <p style={{}} className="greytext">
+            Status
+          </p>
+          {renderStatus(item)}
         </div>
         <div className="modifiedBtn CELL 6" style={{ flex: 1, flexDirection: "column", display: "flex", gap: 10 }}>
           {renderBtn(item.status, item._id)}
         </div>
       </div>
       <Divider />
-      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: 10, flex: 1, flexDirection: "row" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flex: 1,
+          flexDirection: "row",
+        }}>
         {item.status !== "cancelled" ? (
           data.map((_, index) => (
             <div style={{ flex: index === data.length - 1 ? 0.5 : 1, display: "flex" }} key={index}>
@@ -318,7 +394,7 @@ const SingleOrderCard = ({ item, index, fetchData, setData, currentPage, setCurr
                     }}>
                     {data[index].title}
                   </span>
-                  {data[index].value}
+                  {formatTo12HourTime(data[index].value)}
                   {}
                 </div>
               </div>
@@ -333,7 +409,7 @@ const SingleOrderCard = ({ item, index, fetchData, setData, currentPage, setCurr
                       alignItems: "center",
                       flexDirection: "row",
                     }}>
-                    <div style={{ marginBottom: 10, marginRight: 15 }}>{data[index].diff}</div>
+                    <div style={{ marginBottom: 10, marginRight: 15 }}>{renderDifferences(index)}</div>
                     <div>
                       <svg
                         viewBox="0 0 24 24"
