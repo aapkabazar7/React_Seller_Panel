@@ -6,9 +6,7 @@ import { formatDate, generateOptions } from "../../utils/DateHandler";
 
 Chart.register(ArcElement);
 
-
 const SemiDonut = ({ data, setDonutDates, donutDates }) => {
-
   const [options] = useState(generateOptions());
   const [selectedMonth, setSelectedMonth] = useState("");
 
@@ -25,11 +23,11 @@ const SemiDonut = ({ data, setDonutDates, donutDates }) => {
 
     setDonutDates({ fromDate: formattedFromDate, toDate: formattedToDate });
   };
-
+  console.log(data, "data");
   return (
-    <div style={{display: 'flex', flexDirection: 'column', height: 450, flex: 1 , alignItems: 'center'}}>
+    <div style={{ display: "flex", flexDirection: "column", height: 450, flex: 1, alignItems: "center" }}>
       <div style={{ display: "flex", justifyContent: "flex-end", width: 350 }}>
-        <select style={{  padding: "10px 5px", borderRadius: 8, border: '1px solid #eee'}} value={selectedMonth} onChange={handleChange}>
+        <select style={{ padding: "10px 5px", borderRadius: 8, border: "1px solid #eee" }} value={selectedMonth} onChange={handleChange}>
           {options.map((option, index) => (
             <option key={index} value={option.value}>
               {option.label}
@@ -37,36 +35,35 @@ const SemiDonut = ({ data, setDonutDates, donutDates }) => {
           ))}
         </select>
       </div>
-      <div style={{width: '280px !important', height: '280px !important'}}>
-      <Doughnut
-      
-        data={{
-          datasets: [
-            {
-              data: [data.desktop, data.phone, data.tablet],
-              backgroundColor: ["#2d9fec", "#f6ba2a", "red"],
-              display: true,
-              // borderColor: "rgb(227 227 227)"
+      <div style={{ width: "280px !important", height: "280px !important" }}>
+        <Doughnut
+          data={{
+            datasets: [
+              {
+                data: [data.desktop, data.phone, data.tablet],
+                backgroundColor: ["#2d9fec", "#f6ba2a", "red"],
+                display: true,
+                // borderColor: "rgb(227 227 227)"
+              },
+            ],
+          }}
+          options={{
+            plugins: {
+              legend: {
+                display: false,
+              },
+              tooltip: {
+                enabled: false,
+              },
             },
-          ],
-        }}
-        options={{
-          plugins: {
-            legend: {
-              display: false,
-            },
-            tooltip: {
-              enabled: false,
-            },
-          },
 
-          rotation: -90,
-          circumference: 180,
-          cutout: "60%",
-          maintainAspectRatio: true,
-          responsive: true,
-        }}
-      />
+            rotation: -90,
+            circumference: 180,
+            cutout: "60%",
+            maintainAspectRatio: true,
+            responsive: true,
+          }}
+        />
       </div>
       <div
         style={{
@@ -90,7 +87,7 @@ const SemiDonut = ({ data, setDonutDates, donutDates }) => {
               height: 15,
               backgroundColor: "#2d9fec",
             }}></div>
-          Order received from {Object.keys(data)[0]} <strong>({Object.values(data)[0]})</strong>
+          Order received from Desktop <strong>({data.desktop})</strong>
         </div>
         <div
           style={{
@@ -108,8 +105,8 @@ const SemiDonut = ({ data, setDonutDates, donutDates }) => {
               height: 15,
               backgroundColor: "#f6ba2a",
             }}></div>
-          Order received from {Object.keys(data)[1]}
-          <strong>({Object.values(data)[1]})</strong>
+          Order received from Phone
+          <strong>({data.phone})</strong>
         </div>
         <div
           style={{
@@ -127,8 +124,8 @@ const SemiDonut = ({ data, setDonutDates, donutDates }) => {
               height: 15,
               backgroundColor: "red",
             }}></div>
-          Order received from {Object.keys(data)[2]}
-          <strong>({Object.values(data)[2]})</strong>
+          Order received from Tablet
+          <strong>({data.tablet})</strong>
         </div>
       </div>
     </div>

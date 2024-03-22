@@ -3,7 +3,7 @@ import "./Orders.css";
 import { confirmPendingOrder, dispatchProcessedOrder, getOrders, processConfirmedOrder } from "../../Apis/orders";
 import { getDashboardDetails, getOrderWiseReport } from "../../Apis/Dashboard";
 import ExportComponent from "./ExportComponent";
-import SingleOrderCard from "./SingleOrderCard";
+import SingleOrderCard from "./SingleOrderCard copy";
 import { ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { getCustomerByPhoneApi } from "../../Apis/Customer";
@@ -125,7 +125,7 @@ const Orders = () => {
     setData(null);
     setLoadingOrders(true);
     const requestTimestamp = Date.now();
-    console.log("reqeust time ", requestTimestamp)
+    console.log("reqeust time " , requestTimestamp)
     try {
       const result = await getOrders(orders, fromDate, toDate, PhoneNumber);
       if (Math.abs(requestTimestamp - latestRequestTimestamp.current) <= 50) {
@@ -152,7 +152,7 @@ const Orders = () => {
   const latestRequestTimestamp = useRef(null);
   useEffect(() => {
     latestRequestTimestamp.current = Date.now();
-    console.log("current time ", latestRequestTimestamp.current)
+    console.log("current time " , latestRequestTimestamp.current)
     setCurrentPageNumber(0);
     setData([]);
     fetchData().then();
@@ -182,7 +182,17 @@ const Orders = () => {
       return null;
     }
 
-    return data.orders.map((item, index) => <SingleOrderCard key={index} setCurrentPageNumber={setCurrentPageNumber} setData={setData} latestRequestTimestamp={latestRequestTimestamp} fetchData={fetchData} item={item} index={index} />);
+    return data.orders.map((item, index) => (
+      <SingleOrderCard
+        key={index}
+        setCurrentPageNumber={setCurrentPageNumber}
+        setData={setData}
+        latestRequestTimestamp={latestRequestTimestamp}
+        fetchData={fetchData}
+        item={item}
+        index={index}
+      />
+    ));
   };
 
   return (
@@ -323,7 +333,7 @@ const Orders = () => {
         </div>
         <div></div>
 
-        <table>
+        {/* <table>
           <thead>
             <tr className="headerRow">
               <th>Sr</th>
@@ -335,8 +345,22 @@ const Orders = () => {
               <th>Action</th>
             </tr>
           </thead>
-          <tbody>{loadOrders()}</tbody>
-        </table>
+          <tbody></tbody>
+        </table> */}
+        {data &&
+          data.orders &&
+          data.orders.length > 0 &&
+          data.orders.map((item, index) => (
+            <SingleOrderCard
+              key={index}
+              setCurrentPageNumber={setCurrentPageNumber}
+              setData={setData}
+              latestRequestTimestamp={latestRequestTimestamp}
+              fetchData={fetchData}
+              item={item}
+              index={index}
+            />
+          ))}
         {noMoreOrders && <p style={{ textAlign: "center" }}>❌No More Orders</p>}
         {loadingOrders && <div className="loader"></div>}
       </div>

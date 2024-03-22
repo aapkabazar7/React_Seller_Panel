@@ -15,7 +15,7 @@ export default function AlertDialogSlide({ open, setOpen, children, heading }) {
   return (
     <React.Fragment>
       <Dialog
-        maxWidth={"md"}
+        fullWidth
         sx={{ borderRadius: 10 }}
         open={open}
         TransitionComponent={Transition}

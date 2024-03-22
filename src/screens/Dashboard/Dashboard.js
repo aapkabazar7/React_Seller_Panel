@@ -53,7 +53,7 @@ const Dashboard = () => {
   });
   const getDonutData = async () => {
     setDonutData([]);
-    const result = await getOrderSourceReport(donutDates.fromDate, donutDates.toDate);
+    const result = await getOrderSourceReport("2023-02-01", "2023-02-25");
     let temp = [];
     if (result.success === false) {
       toast.error("Error fetching Device reports");

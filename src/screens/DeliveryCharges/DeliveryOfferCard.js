@@ -3,16 +3,22 @@ import { saveDeliveryoffersApi, searchProductApi } from "../../Apis/DeliveryChar
 import { liveURL } from "../../config/config";
 import { toast } from "react-toastify";
 import { Autocomplete, TextField } from "@mui/material";
+import AlertDialogSlide from "../DeliverySlot/SlotPopup";
 
 export default function DeliveryOfferCard({ item, index }) {
   const [searchedData, setSearchedData] = useState([]);
-  const [product, setProduct] = useState(item._id.offerOrderProduct);
   const [orderValue, setOrderValue] = useState(item._id.offerOrderAmount);
   const [pincodes, setPincodes] = useState(item.pincodes);
-  const [searchQuery, setSearchQuery] = useState(
-    item && item._id && item._id.offerOrderProduct && item._id.offerOrderProduct.name ? item._id.offerOrderProduct.name : ""
-  );
-  console.log(item);
+  const [product, setProduct] = useState(item._id.offerOrderProduct || {});
+  const [showChange, setShowChange] = useState(false);
+  const [searchQuery, setSearchQuery] = useState(item._id.offerOrderProduct?.name || "");
+
+  React.useEffect(() => {
+    if (searchQuery) {
+      searchKeywordHandler(searchQuery);
+    }
+  }, [searchQuery]);
+
   const searchKeywordHandler = async (e) => {
     try {
       if (e.length > 3) {
@@ -30,6 +36,7 @@ export default function DeliveryOfferCard({ item, index }) {
   //     setSearchQuery(item._id.offerOrderProduct.name);
   //   }
   // }, [item]);
+  const toastId = React.useRef(null);
 
   const handleSave = async () => {
     const data = {
@@ -38,38 +45,79 @@ export default function DeliveryOfferCard({ item, index }) {
       pincodes: pincodes,
     };
     try {
+      toastId.current = toast.loading("Saving offer", {
+        autoClose: false,
+      });
       await saveDeliveryoffersApi(data);
+      toast.dismiss();
       toast.success("Offer saved successfully");
     } catch (err) {
       console.error("Error saving delivery charges:", err);
+      toast.dismiss();
       toast.error("Error saving delivery charges");
       throw err;
     }
   };
 
-  useEffect(() => {
-    console.log(product);
-  }, [product]);
   return (
-    <div style={{ backgroundColor: "rgb(238 238 238 / 49%)", padding: 10, borderRadius: 10, width: "100%", alignItems: "center" }}>
+    <div style={{ backgroundColor: "#f0f0f0", padding: 10, borderRadius: 10, width: "100%", alignItems: "center" }}>
       <div style={{ flex: 1, display: "flex", flexDirection: "row", marginBottom: 10 }}>
-        <div style={{ flex: 0.8 }}>
-          <Autocomplete
-            id="product-search"
-            clearOnBlur
-            options={searchedData}
-            getOptionLabel={(option) => option.name}
-            onChange={(_, value) => {
-              setProduct(value);
-              setSearchQuery(value.name);
+        <div style={{ display: "flex", flex: 0.8, flexDirection: "row", alignItems: "flex-end" }}>
+          {/* <div
+            onClick={() => {
+              setShowChange(true);
             }}
-            inputValue={searchQuery}
-            onInputChange={(e, newInputValue) => {
-              searchKeywordHandler(newInputValue);
-              setSearchQuery(newInputValue);
+            style={{ flex: 1, border: "0px solid red", textDecoration: "underline", textDecorationStyle: "dashed" }}>
+            <span style={{ cursor: "pointer", verticalAlign: "top" }}> {item._id.offerOrderProduct?.name}</span>
+          </div> */}
+          <input
+            type="text"
+            value={product.name}
+            onClick={() => {
+              setShowChange(true);
             }}
-            renderInput={(params) => <TextField {...params} label="Search Product" variant="standard" />}
-          />{" "}
+            placeholder="Search Product"
+            style={{ display: "flex", flex: 1, textTransform: "capitalize", backgroundColor: "white", padding: 10 }}
+          />
+
+          <AlertDialogSlide open={showChange} setOpen={setShowChange} heading={"Change product"}>
+            <input type="text" style={{ width: "100%", margin: 10 }} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+            <table style={{ width: "100%" }}>
+              <thead>
+                <tr className="headerRow">
+                  <th>Sr No</th>
+                  <th>Image</th>
+                  <th>HSN Code</th>
+                  <th>Name</th>
+                </tr>
+              </thead>
+              <tbody>
+                {searchedData.map((item, index) => (
+                  <tr
+                    className="tablerow"
+                    onClick={() => {
+                      setProduct(item);
+                      setShowChange(false);
+                    }}
+                    style={{ cursor: "pointer" }}
+                    key={index}>
+                    <td style={{ width: "10%" }}>
+                      <span>{index + 1}</span>
+                    </td>
+                    <td style={{ width: "20%" }}>
+                      <img src={`${liveURL}/public/product/${item.id}/${item.images[0]}`} style={{ width: 50, height: 50 }} alt="" />
+                    </td>
+                    <td style={{ width: "20%" }}>
+                      <span style={{ textTransform: "capitalize" }}>{item.hsnCode}</span>
+                    </td>
+                    <td style={{ width: "70%" }}>
+                      <span style={{ textTransform: "capitalize" }}>{item.name}</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </AlertDialogSlide>
         </div>
         <div style={{ flex: 0.1, display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
           <div style={{ justifyContent: "center", alignItems: "center" }}>Order Value</div>
@@ -90,7 +138,7 @@ export default function DeliveryOfferCard({ item, index }) {
         <div style={{ flex: 0.8 }}>
           <textarea
             onChange={(e) => {
-              setPincodes(e.target.value).split(",");
+              setPincodes(e.target.value.split(","));
             }}
             defaultValue={item.pincodes.join(",")}
             placeholder="Pincodes"

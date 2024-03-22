@@ -17,12 +17,12 @@ button{
     margin: 10px 20px;
 }
 #filterNav {
-    display: flex;
-    flex: 1;
-    justify-content: space-between;
-    margin: 10px 20px;
-    gap: 40px;
-    align-items: center;
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+  margin: 10px 20px;
+  gap: 40px;
+  align-items: center;
 }
 .searchOrder
 {
@@ -33,148 +33,147 @@ button{
     border-color: rgb(210, 210, 210);
     padding: 16px 10px;
 }
-.SearchButton{
-    background-color: #FFCB2D;
-    padding: 12px 12px;
-    border: 1px solid #DAA503;
-    border-radius: 12px;
+.SearchButton {
+  background-color: #ffcb2d;
+  padding: 12px 12px;
+  border: 1px solid #daa503;
+  border-radius: 12px;
 }
-.ExportButton{
-    background-color: #0000001A;
-    padding: 12px 12px;
-    border: 1px solid #00000033;
-    border-radius: 12px;
+.ExportButton {
+  background-color: #0000001a;
+  padding: 12px 12px;
+  border: 1px solid #00000033;
+  border-radius: 12px;
 }
 
-#OrdersListDiv{
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    background-color: white;
-    margin: 20px 20px;
-    padding: 10px 30px;
-    border-radius: 12px;
+#OrdersListDiv {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  background-color: white;
+  margin: 20px 20px;
+  padding: 10px 30px;
+  border-radius: 12px;
 }
-.orderNav{
-    display: flex;
-    flex: 1;
-    justify-content: space-between;
-    align-items: center;
+.orderNav {
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+  align-items: center;
 }
-.orderNav h5{
-    font-size: 20px;
-    font-weight: 500;
+.orderNav h5 {
+  font-size: 20px;
+  font-weight: 500;
 }
 .orderNavButtons {
-    border-radius: 24px;
-    background-color: grey;
-    overflow: hidden;
-    border: 1px solid rgb(218, 218, 218);
+  border-radius: 24px;
+  background-color: grey;
+  overflow: hidden;
+  border: 1px solid rgb(218, 218, 218);
 }
 
-.orderNavButtons button{
-    border: 1px solid rgba(218, 218, 218, 0) !important;
-    padding: 10px;
+.orderNavButtons button {
+  border: 1px solid rgba(218, 218, 218, 0) !important;
+  padding: 10px;
 }
-.orderNavButtons button.active{
-    background-color: rgba(98, 98, 98, 0.158);
-    color: white;
-}
-
-table{
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0 1em;
-    cursor: default;
+.orderNavButtons button.active {
+  background-color: rgba(98, 98, 98, 0.158);
+  color: white;
 }
 
-.headerRow{
-    background-color: rgba(212, 212, 212, 0.618);
-}
-.headerRow th{
-    padding: 10px 0;
-    font-weight: 500    ;
-}
-tbody tr{ 
- box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.1);
- border-radius: 12px;
- text-align: center;
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 1em;
+  cursor: default;
 }
 
-tbody td{
-    padding: 10px 15px;
+.headerRow {
+  background-color: rgba(212, 212, 212, 0.618);
 }
-.greytext{
-    color: grey;
-    font-size: 12px;
-    margin: 0;
-    text-align: left;
+.headerRow th {
+  padding: 10px 0;
+  font-weight: 500;
 }
-.blacktext{
-    color: black;
-    font-size: 16px;
-    margin: 0; 
-    text-align: left;
-    text-transform: capitalize;
-    font-weight: 600;
+tbody tr {
+  box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  text-align: center;
 }
-.boldtext{
-    color: black;
-    font-size: 16px;
-    font-weight: 700;
-    margin: 0;
-    text-align: left;
-    text-transform: capitalize;
+
+tbody td {
+  padding: 10px 15px;
 }
-.spaceLine
-{
-    background-color: rgb(216, 216, 216);
-    height: 1px;
-    margin: 10px 30% 10px 5px;
+.greytext {
+  color: grey;
+  font-size: 12px;
+  margin: 0;
+  text-align: left;
 }
-td button{
-    border-radius: 16px;
-    padding: 8px 16px;
-    border: 0;
-    margin: 0px 5px;
+.blacktext {
+  color: black;
+  font-size: 16px;
+  margin: 0;
+  text-align: left;
+  text-transform: capitalize;
+  font-weight: 600;
 }
-.greenBtn{
-    background-color: #0D9E67;
-    color: white;
-    text-wrap: nowrap;
+.boldtext {
+  color: black;
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+  text-align: left;
+  text-transform: capitalize;
 }
-.redBtn{
-    background-color: #E21B1B1A;
-    text-wrap: nowrap;
-    color: #E21B1B;
+.spaceLine {
+  background-color: rgb(216, 216, 216);
+  height: 1px;
+  margin: 10px 30% 10px 5px;
 }
-.greyBtn{
-    background-color: #0000000D;
-    text-wrap: nowrap;
-    color: #00000080;
+.modifiedBtn button {
+  border-radius: 16px;
+  padding: 8px 16px;
+  border: 0;
+  margin: 0px 5px;
 }
-.cellContainer{
-    display: flex;
-    flex: 1;
-    flex-direction: column;
+.greenBtn {
+  background-color: #0d9e67;
+  color: white;
+  text-wrap: nowrap;
 }
-.halfcellContainer{
-    flex: 0.5;
+.redBtn {
+  background-color: #e21b1b1a;
+  text-wrap: nowrap;
+  color: #e21b1b;
 }
-#dateNav select{
-    height: 40px;
-    border: 0;
-    border-radius: 12px;
-    margin-right: 20%;
-    margin-left: 20px;
-    background-color: #9898981a;
-    padding: 0 5px;
+.greyBtn {
+  background-color: #0000000d;
+  text-wrap: nowrap;
+  color: #00000080;
+}
+.cellContainer {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+.halfcellContainer {
+  flex: 0.5;
+}
+#dateNav select {
+  height: 40px;
+  border: 0;
+  border-radius: 12px;
+  margin-right: 20%;
+  margin-left: 20px;
+  background-color: #9898981a;
+  padding: 0 5px;
 }
 .otpInputBox {
-    background-color: transparent;
-    border-radius: 24px;
-    width: 7rem;
-    border: 1px solid rgb(196, 196, 196);
-    text-align: center;
-    padding: 10px 0px;
+  background-color: transparent;
+  border-radius: 24px;
+  width: 7rem;
+  border: 1px solid rgb(196, 196, 196);
+  text-align: center;
+  padding: 10px 0px;
 }
