@@ -233,12 +233,8 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    fetchData().then();
     getOrderData().then();
     getCardDataSet().then();
-    getGraphs("monthly").then();
-    getTopProductData().then();
-    getDonutData().then();
     getStockData().then();
   }, []);
 
@@ -389,17 +385,23 @@ const Dashboard = () => {
             <button
               ref={refreshRef}
               onClick={async () => {
-                // setLoading({
-                //   cardsLoading: true,
-                //   annualLoading: true,
-                //   donutLoading: true,
-                //   orderWiseLoading: true,
-                //   stockWiseLoading: true,
-                //   topProductLoading: true,
-                //   topCategoryLoading: true,
-                //   topBrandLoading: true,
-                // });
                 const result = await refreshData();
+                setLoading({
+                  cardsLoading: true,
+                  annualLoading: true,
+                  donutLoading: true,
+                  orderWiseLoading: true,
+                  stockWiseLoading: true,
+                  topProductLoading: true,
+                  topCategoryLoading: true,
+                  topBrandLoading: true,
+                });
+                getTopProductData().then();
+                fetchData().then();
+                getDonutData().then();
+                getOrderData().then();
+                getCardDataSet().then();
+                getStockData().then();
                 if (result.success) {
                   toast.success("Data refreshed");
                 }
@@ -462,6 +464,10 @@ const Dashboard = () => {
                 <p style={{ fontSize: 16, fontWeight: "bold" }}>₹{formatIndian(cardData?.deliveryCharges)}</p>
               </div>
               <div className="statCard">
+                <p style={{ fontSize: 12 }}>Gross Sale</p>
+                <p style={{ fontSize: 16, fontWeight: "bold" }}>₹{formatIndian(Math.floor(cardData?.grossSales))}</p>
+              </div>
+              <div className="statCard">
                 <p style={{ fontSize: 12 }}>Net Sale</p>
                 <p style={{ fontSize: 16, fontWeight: "bold" }}>₹{formatIndian(Math.floor(cardData?.netSales))}</p>
               </div>
@@ -472,6 +478,14 @@ const Dashboard = () => {
               <div className="statCard">
                 <p style={{ fontSize: 12 }}>Average Order Amount</p>
                 <p style={{ fontSize: 16, fontWeight: "bold" }}>₹{formatIndian(cardData?.AOV)}</p>
+              </div>
+              <div className="statCard">
+                <p style={{ fontSize: 12 }}>Cancelled Amount</p>
+                <p style={{ fontSize: 16, fontWeight: "bold" }}>{formatIndian(Math.floor(cardData?.cancelledAmount))}</p>
+              </div>
+              <div className="statCard">
+                <p style={{ fontSize: 12 }}>Cancelled Orders</p>
+                <p style={{ fontSize: 16, fontWeight: "bold" }}>₹{formatIndian(cardData?.cancelledOrderCount)}</p>
               </div>
             </>
           )}

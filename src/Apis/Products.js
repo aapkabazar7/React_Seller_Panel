@@ -89,5 +89,16 @@ const addNewProductApi = async (page = 0) => {
     return false;
   }
 };
+export const addNewProductSeller = async (productId, categoryId) => {
+  try{
+    const res = await axios.post(`${baseURL}add/existing/product`, {productId, categoryId}, headers);
+    if(res.status === 200) return res.data;
+    else return false;
+  }
+  catch(err){
+    console.log("Error in addNewProductSeller", err);
+    return false;
+  }
+}
 
 export { fetchProducts, fetchPinCodesApi, blacklistPinCodesApi, getActiveCategoriesApi, fetchBrandsApi, updateProductInfo, addNewProductApi };

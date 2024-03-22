@@ -27,7 +27,7 @@ const SingleOrderCard = ({ item, index, fetchData, setData, currentPage, setCurr
     latestRequestTimestamp.current = Date.now();
     setCurrentPageNumber(0);
     setData([]);
-    // fetchData().then();
+    fetchData().then();
   }
 
   const acceptPendingOrder = async (id) => {
@@ -262,7 +262,7 @@ const SingleOrderCard = ({ item, index, fetchData, setData, currentPage, setCurr
       </td>
       <td style={{ width: "10%" }}>
         <div style={{ paddingTop: "20px" }}>
-          <p className="greytext">Date & Time</p>
+          <p className="greytext">Date & Time ({})</p>
           <h6 className="blacktext">{formatDate(item.date)}</h6>
         </div>
         <div className="spaceLine"></div>

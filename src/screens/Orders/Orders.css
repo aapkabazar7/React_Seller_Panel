@@ -1,16 +1,20 @@
-#FilterOrdersDiv {
-  display: flex;
-  flex: 1;
-  margin: 20px 20px;
-  background-color: white;
-  flex-direction: column;
-  border-radius: 12px;
+#FilterOrdersDiv{
+    display: flex;
+    flex: 1;
+    margin: 20px 20px;
+    background-color: white;
+    flex-direction: row;
+    border-radius: 12px;
+}
+button{
+    cursor: pointer;
 }
 #dateNav {
-  display: flex;
-  flex: 1;
-  justify-content: space-between;
-  margin: 10px 20px;
+    display: flex;
+    flex: 1;
+    justify-content: flex-end;
+    gap: 0;
+    margin: 10px 20px;
 }
 #filterNav {
   display: flex;
@@ -20,13 +24,14 @@
   gap: 40px;
   align-items: center;
 }
-.searchOrder {
-  width: fit-content;
-  display: flex;
-  flex: 1;
-  border-radius: 12px;
-  border-color: rgb(210, 210, 210);
-  padding: 16px 10px;
+.searchOrder
+{
+    max-width: 400px;
+    display: flex;
+    flex: 1;
+    border-radius: 12px;
+    border-color: rgb(210, 210, 210);
+    padding: 16px 10px;
 }
 .SearchButton {
   background-color: #ffcb2d;
