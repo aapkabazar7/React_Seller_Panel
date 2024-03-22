@@ -21,7 +21,7 @@ const SingleOrderCard = ({ item, index, fetchData, setData, currentPage, setCurr
     latestRequestTimestamp.current = Date.now();
     setCurrentPageNumber(0);
     setData([]);
-    // fetchData().then();
+    fetchData().then();
   }
 
   const acceptPendingOrder = async (id) => {
@@ -256,7 +256,7 @@ const SingleOrderCard = ({ item, index, fetchData, setData, currentPage, setCurr
       </td>
       <td>
         <div style={{ paddingTop: "20px" }}>
-          <p className="greytext">Date & Time</p>
+          <p className="greytext">Date & Time ({})</p>
           <h6 className="blacktext">{formatDate(item.date)}</h6>
         </div>
         <div className="spaceLine"></div>
@@ -268,7 +268,7 @@ const SingleOrderCard = ({ item, index, fetchData, setData, currentPage, setCurr
           <h6 className="blacktext">{item.deliveryTime?.slot}</h6>
         </div>
       </td>
-      <td>
+      <td style={{ cursor: "pointer" }} onClick={()=>{navigate(`/customerdetails?id=${item.userId}`)}}>
         <div>
           <p className="greytext">Name & Mobile</p>
           <h6 className="boldtext">
@@ -294,7 +294,7 @@ const SingleOrderCard = ({ item, index, fetchData, setData, currentPage, setCurr
           <p className="blacktext">₹ {item.amount}</p>
         </div>
       </td>
-      <td>{renderStatus(item)}</td>
+      <td >{renderStatus(item)}</td>
       <td>
         <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>{renderBtn(item.status, item._id)}</div>
       </td>

@@ -70,37 +70,10 @@ const BulkOrders = () => {
 
     return (
         <div>
-            <div id="FilterOrdersDiv">
-                <div id="dateNav">
-                    <div style={{ display: 'flex' }}>
-                        <p>Select Date</p>
-                        <select value={selectedDateOption} onChange={(e) => setSelectedDateOption(e.target.value)}  >
-                            <option value="today">Today</option>
-                            <option value="yesterday">Yesterday</option>
-                            <option value="last7Days">Last 7 Days</option>
-                            <option value="custom">Custom</option>
-                        </select>
-                        {selectedDateOption === 'custom' ?
-                            <>
-                                <input type="date" placeholder="from" onChange={(e) => setFromDate(e.target.value)} />
-                                <input type="date" placeholder="to" onChange={(e) => setToDate(e.target.value)} />
-                            </>
-                            : <></>}
-                    </div>
-                    {/* <ExportComponent orderType={orders} /> */}
-                </div>
-                <div id="filterNav">
-                    <p>Filters</p>
-                    <input className="searchOrder" placeholder="Search By product name, sku , barcode and hsn code" type="text" />
-                    <input className="searchOrder" placeholder="Search by customer name" type="text" />
-                    <input className="searchOrder" value={PhoneNumber} placeholder="Search by Mobile" type="text" onChange={(e) => setPhoneNumber(e.target.value)} />
-                    <button className="SearchButton" >SEARCH</button>
-                </div>
-            </div>
 
             <div id="OrdersListDiv">
                 <div className="orderNav">
-                    <h5>All Orders</h5>
+                    <h3>Bulk Orders</h3>
                 </div>
 
 
