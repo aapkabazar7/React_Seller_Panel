@@ -62,6 +62,7 @@ const DeliverySlot = () => {
   }, [searchPincode]);
 
   const bulkUpdate = async (arrayOfPincodes, arrayOfObjects) => {
+    console.log(arrayOfObjects, arrayOfPincodes);
     const result = await bulkUpdateTimeSlots({
       pincodes: arrayOfPincodes,
       timeSlot: arrayOfObjects,
@@ -93,7 +94,7 @@ const DeliverySlot = () => {
             autoCorrect="false"
             autoFocus
             style={{ padding: 12, margin: 0, display: "flex" }}
-            value={searchPincode}
+            defaultValue={searchPincode ? searchPincode : ""}
             onChange={(e) => {
               setSearchPincode(e.target.value);
             }}
@@ -223,6 +224,7 @@ const DeliverySlot = () => {
               <div style={{ display: "flex", flex: 1, flexDirection: "column", gap: 20 }}>
                 <div
                   onClick={async () => {
+                    console.log("INITIAL TIME SLOT ");
                     var initialTimeSlot = { slot: "10:00AM - 08:00PM", isDisabled: true, day: 0, orderCount: 0, value: { minutes: 0 } };
                     await bulkUpdate([Number(areaDetails.area)], [...bulkAreaEdit, initialTimeSlot]);
                   }}
@@ -243,7 +245,8 @@ const DeliverySlot = () => {
                     Create New Slot ➕
                   </button>
                   <button
-                    onClick={async () => {
+                    onClick={async (e) => {
+                      e.stopPropagation();
                       bulkUpdate(bulkPincodes.split(","), bulkAreaEdit);
                       setBulkPincodes("");
                     }}

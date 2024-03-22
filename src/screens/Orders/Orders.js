@@ -3,8 +3,10 @@ import "./Orders.css";
 import { confirmPendingOrder, dispatchProcessedOrder, getOrders, processConfirmedOrder } from "../../Apis/orders";
 import { getDashboardDetails, getOrderWiseReport } from "../../Apis/Dashboard";
 import ExportComponent from "./ExportComponent";
-import SingleOrderCard from "./SingleOrderCard";
+import SingleOrderCard from "./SingleOrderCard copy";
 import { ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { getCustomerByPhoneApi } from "../../Apis/Customer";
 
 const Orders = () => {
   const [searchDisable, searchDisable_] = useState(false);
@@ -19,6 +21,7 @@ const Orders = () => {
   const [noMoreOrders, setNoMoreOrders] = useState(false);
   const [currentPageNumber, setCurrentPageNumber] = useState(1);
   const [PhoneNumber, setPhoneNumber] = useState("");
+  const navigate = useNavigate();
 
   const handleButtonClick = (orderType) => {
     setOrders(orderType);
@@ -144,6 +147,7 @@ const Orders = () => {
     setLoadingOrders(false);
   };
 
+
   // Define a ref to store the timestamp of the latest request
   const latestRequestTimestamp = useRef(null);
   useEffect(() => {
@@ -154,21 +158,71 @@ const Orders = () => {
     fetchData().then();
   }, [orders]);
 
+  const handlePhoneNumber = async () => {
+    if (PhoneNumber.length === 10) {
+      try {
+        const res = await getCustomerByPhoneApi(PhoneNumber);
+        if (res && res.users && res.users._id)
+          navigate(`/customerdetails?id=${res.users._id}`)
+        else {
+          alert("Not found.")
+        }
+      } catch (error) {
+        console.log(error)
+        alert("Not found.")
+      }
+    }
+    else
+      alert("Enter 10 digit numeber.")
+  }
+
   const loadOrders = () => {
     console.log("Data: ", data);
     if (!data || !data.orders || data.orders.length === 0) {
       return null;
     }
 
-    return data.orders.map((item, index) => <SingleOrderCard key={index} setCurrentPageNumber={setCurrentPageNumber} setData={setData} latestRequestTimestamp={latestRequestTimestamp} fetchData={fetchData} item={item} index={index} />);
+    return data.orders.map((item, index) => (
+      <SingleOrderCard
+        key={index}
+        setCurrentPageNumber={setCurrentPageNumber}
+        setData={setData}
+        latestRequestTimestamp={latestRequestTimestamp}
+        fetchData={fetchData}
+        item={item}
+        index={index}
+      />
+    ));
   };
 
   return (
     <div>
       <div id="FilterOrdersDiv">
+        <div id="filterNav">
+          <input className="searchOrder" defaultValue={PhoneNumber} placeholder="Search by Mobile" type="text" onChange={(e) => setPhoneNumber(e.target.value)} />
+          <button
+            onClick={handlePhoneNumber}
+            style={{
+              cursor: !searchDisable ? "pointer" : "default",
+              backgroundColor: searchDisable ? "#ddd" : "#ffef03",
+              color: searchDisable ? "#aaa" : "#000",
+              borderWidth: searchDisable ? 0 : 1,
+              padding: 10,
+              fontSize: 14,
+              flex: 1,
+              borderRadius: 10,
+              borderStyle: "solid",
+              borderColor: "#e3d400",
+              overflow: "hidden",
+              textAlign: "center",
+              alignItems: "center",
+              maxWidth: 200
+            }}>
+            Search
+          </button>
+        </div>
         <div id="dateNav">
           <div style={{ display: "flex", gap: 20, width: "60%", justifyContent: "center", alignItems: "center" }}>
-            <div style={{ flex: 1 }}>Select Date Range</div>
             <div
               style={{
                 flex: 0.2,
@@ -244,54 +298,10 @@ const Orders = () => {
                 placeholder="End date"
               />
             </div>
-            <button
-              onClick={async () => {
-                latestRequestTimestamp.current = Date.now();
-                await fetchData();
-              }}
-              style={{
-                cursor: !searchDisable ? "pointer" : "default",
-                backgroundColor: searchDisable ? "#ddd" : "#ffef03",
-                color: searchDisable ? "#aaa" : "#000",
-                borderWidth: searchDisable ? 0 : 1,
-                padding: 10,
-                fontSize: 14,
-                flex: 0.7,
-                borderRadius: 10,
-                borderStyle: "solid",
-                borderColor: "#e3d400",
-                overflow: "hidden",
-                textAlign: "center",
-                alignItems: "center",
-              }}>
-              Search
-            </button>
           </div>
           <ExportComponent orderType={orders} />
         </div>
-        <div id="filterNav">
-          <p>Filters</p>
-          <input className="searchOrder" value={PhoneNumber} placeholder="Search by Mobile" type="text" onChange={(e) => setPhoneNumber(e.target.value)} />
-          <button
-            onClick={fetchData}
-            style={{
-              cursor: !searchDisable ? "pointer" : "default",
-              backgroundColor: searchDisable ? "#ddd" : "#ffef03",
-              color: searchDisable ? "#aaa" : "#000",
-              borderWidth: searchDisable ? 0 : 1,
-              padding: 10,
-              fontSize: 14,
-              flex: 0.7,
-              borderRadius: 10,
-              borderStyle: "solid",
-              borderColor: "#e3d400",
-              overflow: "hidden",
-              textAlign: "center",
-              alignItems: "center",
-            }}>
-            Search
-          </button>
-        </div>
+
       </div>
 
       <div id="OrdersListDiv">
@@ -323,7 +333,7 @@ const Orders = () => {
         </div>
         <div></div>
 
-        <table>
+        {/* <table>
           <thead>
             <tr className="headerRow">
               <th>Sr</th>
@@ -335,8 +345,22 @@ const Orders = () => {
               <th>Action</th>
             </tr>
           </thead>
-          <tbody>{loadOrders()}</tbody>
-        </table>
+          <tbody></tbody>
+        </table> */}
+        {data &&
+          data.orders &&
+          data.orders.length > 0 &&
+          data.orders.map((item, index) => (
+            <SingleOrderCard
+              key={index}
+              setCurrentPageNumber={setCurrentPageNumber}
+              setData={setData}
+              latestRequestTimestamp={latestRequestTimestamp}
+              fetchData={fetchData}
+              item={item}
+              index={index}
+            />
+          ))}
         {noMoreOrders && <p style={{ textAlign: "center" }}>❌No More Orders</p>}
         {loadingOrders && <div className="loader"></div>}
       </div>

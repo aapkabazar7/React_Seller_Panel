@@ -53,7 +53,7 @@ const Dashboard = () => {
   });
   const getDonutData = async () => {
     setDonutData([]);
-    const result = await getOrderSourceReport(donutDates.fromDate, donutDates.toDate);
+    const result = await getOrderSourceReport("2023-02-01", "2023-02-25");
     let temp = [];
     if (result.success === false) {
       toast.error("Error fetching Device reports");
@@ -396,7 +396,12 @@ const Dashboard = () => {
                   topCategoryLoading: true,
                   topBrandLoading: true,
                 });
-                
+                getTopProductData().then();
+                fetchData().then();
+                getDonutData().then();
+                getOrderData().then();
+                getCardDataSet().then();
+                getStockData().then();
                 if (result.success) {
                   toast.success("Data refreshed");
                 }
@@ -459,6 +464,10 @@ const Dashboard = () => {
                 <p style={{ fontSize: 16, fontWeight: "bold" }}>₹{formatIndian(cardData?.deliveryCharges)}</p>
               </div>
               <div className="statCard">
+                <p style={{ fontSize: 12 }}>Gross Sale</p>
+                <p style={{ fontSize: 16, fontWeight: "bold" }}>₹{formatIndian(Math.floor(cardData?.grossSales))}</p>
+              </div>
+              <div className="statCard">
                 <p style={{ fontSize: 12 }}>Net Sale</p>
                 <p style={{ fontSize: 16, fontWeight: "bold" }}>₹{formatIndian(Math.floor(cardData?.netSales))}</p>
               </div>
@@ -469,6 +478,14 @@ const Dashboard = () => {
               <div className="statCard">
                 <p style={{ fontSize: 12 }}>Average Order Amount</p>
                 <p style={{ fontSize: 16, fontWeight: "bold" }}>₹{formatIndian(cardData?.AOV)}</p>
+              </div>
+              <div className="statCard">
+                <p style={{ fontSize: 12 }}>Cancelled Amount</p>
+                <p style={{ fontSize: 16, fontWeight: "bold" }}>{formatIndian(Math.floor(cardData?.cancelledAmount))}</p>
+              </div>
+              <div className="statCard">
+                <p style={{ fontSize: 12 }}>Cancelled Orders</p>
+                <p style={{ fontSize: 16, fontWeight: "bold" }}>₹{formatIndian(cardData?.cancelledOrderCount)}</p>
               </div>
             </>
           )}

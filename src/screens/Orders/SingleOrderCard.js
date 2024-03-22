@@ -13,7 +13,13 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { printInvoice } from "../../utils/toast";
 import { toast } from "react-toastify";
 // import './Orders.css'
-
+const data = [
+  { title: "Placed", value: "13:00pm", diff: "0m" },
+  { title: "Confirmed", value: "13:05pm", diff: "5m " },
+  { title: "Processed", value: "13:15pm", diff: "10m " },
+  { title: "Dispatched", value: "13:20pm", diff: "5m " },
+  { title: "Delivered", value: "13:40pm", diff: "20m " },
+];
 const SingleOrderCard = ({ item, index, fetchData, setData, currentPage, setCurrentPageNumber, latestRequestTimestamp }) => {
   const [otp, setOtp] = useState("");
   const navigate = useNavigate();
@@ -21,7 +27,7 @@ const SingleOrderCard = ({ item, index, fetchData, setData, currentPage, setCurr
     latestRequestTimestamp.current = Date.now();
     setCurrentPageNumber(0);
     setData([]);
-    // fetchData().then();
+    fetchData().then();
   }
 
   const acceptPendingOrder = async (id) => {
@@ -248,15 +254,15 @@ const SingleOrderCard = ({ item, index, fetchData, setData, currentPage, setCurr
 
   return (
     <tr key={index}>
-      <td>{index + 1}</td>
-      <td>
+      <td style={{ width: "5%" }}>{index + 1}</td>
+      <td style={{ width: "5%" }}>
         <span style={{ cursor: "pointer" }} onClick={() => fetchOrderDetails(item.id)}>
           {item.id}
         </span>
       </td>
-      <td>
+      <td style={{ width: "10%" }}>
         <div style={{ paddingTop: "20px" }}>
-          <p className="greytext">Date & Time</p>
+          <p className="greytext">Date & Time ({})</p>
           <h6 className="blacktext">{formatDate(item.date)}</h6>
         </div>
         <div className="spaceLine"></div>
@@ -268,13 +274,27 @@ const SingleOrderCard = ({ item, index, fetchData, setData, currentPage, setCurr
           <h6 className="blacktext">{item.deliveryTime?.slot}</h6>
         </div>
       </td>
-      <td>
-        <div>
-          <p className="greytext">Name & Mobile</p>
-          <h6 className="boldtext">
-            {item.address?.name} {item.address?.mobileNo}
-          </h6>
+      <td style={{ width: "100%" }}>
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          {data.map((item, index) => {
+            return (
+              <table>
+                <tbody>
+                  {data.map((item, index) => {
+                    return (
+                      <tr>
+                        <td>{data[index].title}</td>
+                        <td>{data[index].value}</td>
+                        <td>{data[index].diff}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            );
+          })}
         </div>
+
         <div className="spaceLine"></div>
         <div style={{ borderTopWidth: 1, marginTop: "10px" }}>
           <p className="greytext">Delivery Address</p>
@@ -282,8 +302,15 @@ const SingleOrderCard = ({ item, index, fetchData, setData, currentPage, setCurr
             {item.address?.line1} {item.address?.line2}
           </p>
         </div>
+        <div className="spaceLine"></div>
+        <div style={{ justifyContent: "center" }}>
+          {/* <p className="greytext">Name & Mobile</p> */}
+          <span style={{ fontWeight: "normal", textAlign: "left", textTransform: "capitalize" }}>
+            {item.address?.name} {item.address?.mobileNo}
+          </span>
+        </div>
       </td>
-      <td>
+      <td style={{ width: "40%" }}>
         <div>
           <p className="greytext">Payment Mode</p>
           <p className="blacktext">{item.paymentMode}</p>
@@ -294,8 +321,8 @@ const SingleOrderCard = ({ item, index, fetchData, setData, currentPage, setCurr
           <p className="blacktext">₹ {item.amount}</p>
         </div>
       </td>
-      <td>{renderStatus(item)}</td>
-      <td>
+      <td style={{ width: "20%" }}>{renderStatus(item)}</td>
+      <td style={{ width: "10%" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>{renderBtn(item.status, item._id)}</div>
       </td>
     </tr>

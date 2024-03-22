@@ -41,7 +41,7 @@ import OrderDetails from "../../screens/OrderDetails/OrderDetails";
 import Dashboard from "../../screens/Dashboard/Dashboard";
 import DeliveryCharge from "../../screens/DeliveryCharges/DeliveryCharge";
 import NewProduct from "../../screens/NewProduct/NewProduct";
-import { Logout } from "@mui/icons-material";
+import NewDeliveryCharge from "../../screens/New_Delivery_Charge/NewDeliveryCharge";
 
 const drawerWidth = 240;
 
@@ -143,18 +143,18 @@ export default function MiniDrawer() {
   const renderContent = () => {
     return (
       <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/orders" element={<Orders />} />
+        <Route path="/customerdetails" element={<CustomerDetails />} />
+        <Route path="/deliverycharges" element={<NewDeliveryCharge />} />
+        <Route path="/deliveryslot" element={<DeliverySlot />} />
+        <Route path="/orderdetails" element={<OrderDetails />} />
+        <Route path="/deliveryboy" element={<DeliveryBoy />} />
+        <Route path="/newProduct" element={<NewProduct />} />
+        <Route path="/bulkorders" element={<BulkOrders />} />
+        <Route path="/customers" element={<Customers />} />
         <Route path="/products" element={<Products />} />
         <Route path="/category" element={<Category />} />
-        <Route path="/newProduct" element={<NewProduct />} />
-        <Route path="/customers" element={<Customers />} />
-        <Route path="/bulkorders" element={<BulkOrders />} />
-        <Route path="/deliveryslot" element={<DeliverySlot />} />
-        <Route path="/deliverycharges" element={<DeliveryCharge />} />
-        <Route path="/deliveryboy" element={<DeliveryBoy />} />
-        <Route path="/orderdetails" element={<OrderDetails />} />
-        <Route path="/customerdetails" element={<CustomerDetails />} />
+        <Route path="/orders" element={<Orders />} />
+        <Route path="/" element={<Dashboard />} />
       </Routes>
     );
   };
@@ -171,7 +171,7 @@ export default function MiniDrawer() {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <CssBaseline />
+      {/* <CssBaseline /> */}
       <AppBar elevation={0} position="fixed" open={open}>
         <Toolbar style={{ backgroundColor: "white", justifyContent: 'space-between' }}>
           <div style={{display: 'flex'}}>
@@ -197,10 +197,10 @@ export default function MiniDrawer() {
           <button style={{ cursor: "pointer", backgroundColor : '#00000005' , border: '1px solid #0000001A', padding : '12px 25px', borderRadius: '15px' }} onClick={() => {localStorage.removeItem('token'); window.location.reload();}} >Logout</button>
         </Toolbar>
       </AppBar>
-      <Drawer variant="permanent" open={open}>
-        <DrawerHeader sx={{ backgroundColor: "white", display: "flex", justifyContent: "center", alignItems: "center", gap: 2 }}>
+      <Drawer style={{ borderRight: "none" }} variant="permanent" open={open}>
+        <DrawerHeader sx={{ backgroundColor: "white", display: "flex", borderRight: "none", justifyContent: "center", alignItems: "center", gap: 2 }}>
           <div style={{ justifyContent: "center", alignItems: "center" }}>
-            <img src={UserSvg} alt="user Image" id="profileImage" />
+            <img style={{ height: 40, width: 40, borderRadius: "50%" }} src={UserSvg} alt="user" id="profileImage" />
           </div>
           <div>
             <div style={{ fontSize: 14 }}>Subodh Avasthi</div>
@@ -208,7 +208,7 @@ export default function MiniDrawer() {
           </div>
           <IconButton onClick={handleDrawerClose}>{theme.direction === "rtl" ? <ChevronRightIcon /> : <ChevronLeftIcon />}</IconButton>
         </DrawerHeader>
-        <List>
+        <List style={{ borderRight: "none" }}>
           {menuItems.map((item, index) => (
             <ListItem
               key={index}
