@@ -1,7 +1,5 @@
 import { BrowserRouter as Router } from "react-router-dom";
 import MiniDrawer from "./NewComponents/HomePage/HomePage";
-import LeftPanel from "./leftPanel";
-import Login from "./NewComponents/HomePage/Login/Login";
 import { ToastContainer } from "react-toastify";
 
 function App() {

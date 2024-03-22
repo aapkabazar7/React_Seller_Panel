@@ -77,7 +77,7 @@ export default function DeliveryOfferCard({ item, index }) {
               setShowChange(true);
             }}
             placeholder="Search Product"
-            style={{ display: "flex", flex: 1 }}
+            style={{ display: "flex", flex: 1, textTransform: "capitalize", backgroundColor: "white", padding: 10 }}
           />
 
           <AlertDialogSlide open={showChange} setOpen={setShowChange} heading={"Change product"}>

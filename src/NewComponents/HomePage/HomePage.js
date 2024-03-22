@@ -143,18 +143,18 @@ export default function MiniDrawer() {
   const renderContent = () => {
     return (
       <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/orders" element={<Orders />} />
+        <Route path="/customerdetails" element={<CustomerDetails />} />
+        <Route path="/deliverycharges" element={<NewDeliveryCharge />} />
+        <Route path="/deliveryslot" element={<DeliverySlot />} />
+        <Route path="/orderdetails" element={<OrderDetails />} />
+        <Route path="/deliveryboy" element={<DeliveryBoy />} />
+        <Route path="/newProduct" element={<NewProduct />} />
+        <Route path="/bulkorders" element={<BulkOrders />} />
+        <Route path="/customers" element={<Customers />} />
         <Route path="/products" element={<Products />} />
         <Route path="/category" element={<Category />} />
-        <Route path="/newProduct" element={<NewProduct />} />
-        <Route path="/customers" element={<Customers />} />
-        <Route path="/bulkorders" element={<BulkOrders />} />
-        <Route path="/deliveryslot" element={<DeliverySlot />} />
-        <Route path="/deliverycharges" element={<DeliveryCharge />} />
-        <Route path="/deliveryboy" element={<DeliveryBoy />} />
-        <Route path="/orderdetails" element={<OrderDetails />} />
-        <Route path="/customerdetails" element={<CustomerDetails />} />
+        <Route path="/orders" element={<Orders />} />
+        <Route path="/" element={<Dashboard />} />
       </Routes>
     );
   };
@@ -171,7 +171,7 @@ export default function MiniDrawer() {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <CssBaseline />
+      {/* <CssBaseline /> */}
       <AppBar elevation={0} position="fixed" open={open}>
         <Toolbar style={{ backgroundColor: "white" }}>
           <IconButton
@@ -187,17 +187,17 @@ export default function MiniDrawer() {
             }}>
             <MenuIcon />
           </IconButton>
-          <img style={{ height: 40, width: 40 }} src={logo} id="logo" alt="AkbLogo" />
+          <img style={{ height: 40, width: 40, borderRadius: "50%" }} src={logo} id="logo" alt="AkbLogo" />
           <div style={{ width: 20 }} />
           <Typography color={"black"} variant="h6" noWrap component="div">
             Seller Panel <strong>AKB</strong>
           </Typography>
         </Toolbar>
       </AppBar>
-      <Drawer variant="permanent" open={open}>
-        <DrawerHeader sx={{ backgroundColor: "white", display: "flex", justifyContent: "center", alignItems: "center", gap: 2 }}>
+      <Drawer style={{ borderRight: "none" }} variant="permanent" open={open}>
+        <DrawerHeader sx={{ backgroundColor: "white", display: "flex", borderRight: "none", justifyContent: "center", alignItems: "center", gap: 2 }}>
           <div style={{ justifyContent: "center", alignItems: "center" }}>
-            <img src={UserSvg} alt="user Image" id="profileImage" />
+            <img style={{ height: 40, width: 40, borderRadius: "50%" }} src={UserSvg} alt="user" id="profileImage" />
           </div>
           <div>
             <div style={{ fontSize: 14 }}>Subodh Avasthi</div>
@@ -205,7 +205,7 @@ export default function MiniDrawer() {
           </div>
           <IconButton onClick={handleDrawerClose}>{theme.direction === "rtl" ? <ChevronRightIcon /> : <ChevronLeftIcon />}</IconButton>
         </DrawerHeader>
-        <List>
+        <List style={{ borderRight: "none" }}>
           {menuItems.map((item, index) => (
             <ListItem
               key={index}

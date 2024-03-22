@@ -252,3 +252,7 @@ textarea:focus {
     transform: rotate(360deg);
   }
 }
+
+.MuiDrawer-root div {
+  border-right: none !important;
+}
