@@ -19,7 +19,6 @@ export default function AlertDialogSlide({ open, setOpen, children, heading }) {
         sx={{ borderRadius: 10 }}
         open={open}
         TransitionComponent={Transition}
-        keepMounted
         onClose={() => {
           setOpen(false);
         }}
