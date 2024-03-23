@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./DeliverySlot.css";
+import "./DisabledSlot.css";
 import axios from "axios";
 import { bulkUpdateTimeSlots, getAreaDetailsApi, getServeAreasApi } from "../../Apis/Delivery";
 import AlertDialogSlide from "./SlotPopup";
@@ -7,7 +7,7 @@ import { Button, DialogActions, FormControl, FormControlLabel, FormLabel, Radio,
 import { convertTo24Hour, convertToAMPM, decodeMinutesToTime, encodeTimeToMinutes } from "../../utils/toast";
 import { toast } from "react-toastify";
 
-const DeliverySlot = () => {
+const DisableSlot = () => {
   const [selectedArea, setSelectedArea] = useState(null);
   const [areaDetails, setAreaDetails] = useState(null);
   const [searchPincode, setSearchPincode] = useState(null);
@@ -20,7 +20,6 @@ const DeliverySlot = () => {
   const [showSave, setShowSave] = useState(false);
   const [bulkPincodes, setBulkPincodes] = useState("");
   const [tempChanges, setTempChanges] = useState(null);
-  const [openDisablePopup, setOpenDisablePopup] = useState(false);
   const getAreaDetail = async () => {
     try {
       setBulkAreaEdit([]);
@@ -371,30 +370,25 @@ const DeliverySlot = () => {
               </table>
             </div>
           </div>
-          {true && (
-            <DialogActions>
-              <Button
-                color="primary"
-                onClick={() => {
-                  const newArray = [...bulkAreaEdit];
-                  newArray[modifySlot] = tempChanges;
-                  setBulkAreaEdit(newArray);
-                  bulkUpdate([Number(areaDetails.area)], newArray);
-                  setOpenPopup(false);
-                }}>
-                Save Changes
-              </Button>
-            </DialogActions>
-          )}
+
+          <DialogActions>
+            <Button
+              color="primary"
+              onClick={() => {
+                const newArray = [...bulkAreaEdit];
+                newArray[modifySlot] = tempChanges;
+                setBulkAreaEdit(newArray);
+                bulkUpdate([Number(areaDetails.area)], newArray);
+                setOpenPopup(false);
+              }}>
+              Save Changes
+            </Button>
+          </DialogActions>
+
         </AlertDialogSlide>
       )}
-      {true ?
-        <AlertDialogSlide open={openDisablePopup} heading={`Disable Pincodes`} setOpen={setOpenDisablePopup}>
-
-        </AlertDialogSlide> : <></>
-      }
     </div>
   );
 };
 
-export default DeliverySlot;
+export default DisableSlot;

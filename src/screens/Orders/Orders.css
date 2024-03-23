@@ -1,21 +1,24 @@
-#FilterOrdersDiv{
-    display: flex;
-    flex: 1;
-    margin: 20px 20px;
-    background-color: white;
-    flex-direction: row;
-    border-radius: 12px;
+#FilterOrdersDiv {
+  display: flex;
+  flex: 1;
+  margin: 20px 20px;
+  background-color: white;
+  flex-direction: row;
+  border-radius: 12px;
 }
-button{
-    cursor: pointer;
+
+button {
+  cursor: pointer;
 }
+
 #dateNav {
-    display: flex;
-    flex: 1;
-    justify-content: flex-end;
-    gap: 0;
-    margin: 10px 20px;
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+  gap: 0;
+  margin: 10px 20px;
 }
+
 #filterNav {
   display: flex;
   flex: 1;
@@ -24,21 +27,23 @@ button{
   gap: 40px;
   align-items: center;
 }
-.searchOrder
-{
-    max-width: 400px;
-    display: flex;
-    flex: 1;
-    border-radius: 12px;
-    border-color: rgb(210, 210, 210);
-    padding: 16px 10px;
+
+.searchOrder {
+  max-width: 400px;
+  display: flex;
+  flex: 1;
+  border-radius: 12px;
+  border-color: rgb(210, 210, 210);
+  padding: 16px 10px;
 }
+
 .SearchButton {
   background-color: #ffcb2d;
   padding: 12px 12px;
   border: 1px solid #daa503;
   border-radius: 12px;
 }
+
 .ExportButton {
   background-color: #0000001a;
   padding: 12px 12px;
@@ -55,16 +60,19 @@ button{
   padding: 10px 30px;
   border-radius: 12px;
 }
+
 .orderNav {
   display: flex;
   flex: 1;
   justify-content: space-between;
   align-items: center;
 }
+
 .orderNav h5 {
   font-size: 20px;
   font-weight: 500;
 }
+
 .orderNavButtons {
   border-radius: 24px;
   background-color: grey;
@@ -76,6 +84,7 @@ button{
   border: 1px solid rgba(218, 218, 218, 0) !important;
   padding: 10px;
 }
+
 .orderNavButtons button.active {
   background-color: rgba(98, 98, 98, 0.158);
   color: white;
@@ -91,10 +100,12 @@ table {
 .headerRow {
   background-color: rgba(212, 212, 212, 0.618);
 }
+
 .headerRow th {
   padding: 10px 0;
   font-weight: 500;
 }
+
 tbody tr {
   box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.1);
   border-radius: 12px;
@@ -104,12 +115,14 @@ tbody tr {
 tbody td {
   padding: 10px 15px;
 }
+
 .greytext {
   color: grey;
   font-size: 12px;
   margin: 0;
   text-align: left;
 }
+
 .blacktext {
   color: black;
   font-size: 16px;
@@ -118,6 +131,7 @@ tbody td {
   text-transform: capitalize;
   font-weight: 600;
 }
+
 .boldtext {
   color: black;
   font-size: 16px;
@@ -126,40 +140,61 @@ tbody td {
   text-align: left;
   text-transform: capitalize;
 }
+
 .spaceLine {
   background-color: rgb(216, 216, 216);
   height: 1px;
   margin: 10px 30% 10px 5px;
 }
+
 .modifiedBtn button {
   border-radius: 16px;
   padding: 8px 16px;
   border: 0;
   margin: 0px 5px;
 }
+
+.headingText {
+  font-size: 16px;
+  font-weight: 400;
+  text-align: center;
+}
+
+td button {
+  border-radius: 16px;
+  padding: 8px 16px;
+  border: 0;
+  margin: 0px 5px;
+}
+
 .greenBtn {
   background-color: #0d9e67;
   color: white;
   text-wrap: nowrap;
 }
+
 .redBtn {
   background-color: #e21b1b1a;
   text-wrap: nowrap;
   color: #e21b1b;
 }
+
 .greyBtn {
   background-color: #0000000d;
   text-wrap: nowrap;
   color: #00000080;
 }
+
 .cellContainer {
   display: flex;
   flex: 1;
   flex-direction: column;
 }
+
 .halfcellContainer {
   flex: 0.5;
 }
+
 #dateNav select {
   height: 40px;
   border: 0;
@@ -169,6 +204,7 @@ tbody td {
   background-color: #9898981a;
   padding: 0 5px;
 }
+
 .otpInputBox {
   background-color: transparent;
   border-radius: 24px;
@@ -176,4 +212,44 @@ tbody td {
   border: 1px solid rgb(196, 196, 196);
   text-align: center;
   padding: 10px 0px;
+}
+
+.cardDiv {
+  margin-top: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0px 0px 20px rgb(238 238 238 / 54%);
+    padding: 0;
+    border-radius: 12px;
+    border: 1px solid #eee;
+    cursor: default;
+}
+.cardDiv .headerDiv {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  background-color: #eee;
+  height: 50px;
+  border-radius: 10px 10px 0px 0px;
+  justify-content: center;
+  align-items: center;
+}
+
+.cardDiv .bodyDiv{
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 20px; /* Adding "px" unit */
+  margin-bottom: 10px; /* Using hyphen instead of camelCase */
+  padding: 20px;
+}
+
+.cardDiv .timeLineDiv{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  flex-direction: row;
+  padding: 20px;
 }

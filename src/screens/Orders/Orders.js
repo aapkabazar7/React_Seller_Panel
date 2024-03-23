@@ -3,7 +3,7 @@ import "./Orders.css";
 import { confirmPendingOrder, dispatchProcessedOrder, getOrders, processConfirmedOrder } from "../../Apis/orders";
 import { getDashboardDetails, getOrderWiseReport } from "../../Apis/Dashboard";
 import ExportComponent from "./ExportComponent";
-import SingleOrderCard from "./SingleOrderCard copy";
+import SingleOrderCard from "./SingleOrderCard2";
 import { ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { getCustomerByPhoneApi } from "../../Apis/Customer";
@@ -315,7 +315,7 @@ const Orders = () => {
               New orders ({orderCount && orderCount[5].count})
             </button>
             <button style={{ width: 140 }} className={orders === "confirmed" ? "active" : ""} onClick={() => handleButtonClick("confirmed")}>
-              Confirmed ({orderCount && orderCount[2].count})
+              Checking ({orderCount && orderCount[2].count})
             </button>
             <button style={{ width: 140 }} className={orders === "processed" ? "active" : ""} onClick={() => handleButtonClick("processed")}>
               Processed ({orderCount && orderCount[6].count})

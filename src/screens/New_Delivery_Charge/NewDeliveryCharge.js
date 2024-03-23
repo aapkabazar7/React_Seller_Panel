@@ -191,8 +191,9 @@ function NewDeliveryCharge() {
           borderRadius: "10px",
           boxShadow: "0px 0px 10px 0px #0000001A",
           flexDirection: "column",
+          width: '100%'
         }}>
-        <div style={{ flex: 1, display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+        <div style={{ flex: 1, display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: '100%' }}>
           <div style={{ fontWeight: "bold" }}>Cart Value/Pin Code Wise Offers </div>
           <div>
             <button
