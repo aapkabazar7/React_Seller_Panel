@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { cancelOrder, confirmPendingOrder, deliverOrderApi, dispatchProcessedOrder, getOrders, orderDetailsApi, processConfirmedOrder, restoreOrderApi } from "../../Apis/orders";
 import { Navigate, useNavigate } from "react-router-dom";
+import { printInvoice } from "../../utils/toast";
+import { toast } from "react-toastify";
 // import './Orders.css'
 
 
@@ -30,9 +32,56 @@ const CustomerOrderCard = ({item,index}) => {
         console.log(response)
     }
 
-    const printOrder = async(id) =>{
-
-    }
+    const printOrder = async (id) => {
+        const result = await orderDetailsApi(item.id);
+        if (!result.success) {
+          toast.error(result.message);
+          return;
+        }
+        const temp = result.order;
+        const data = {
+          invoice: {
+            seller: {
+              phoneNo: result.order.seller.phoneNo,
+              sellerInformation: {
+                name: temp.seller.sellerInformation.name,
+                fullAddress: temp.seller.sellerInformation.fullAddress,
+              },
+            },
+            deliveryCharge: temp.deliveryCharge,
+            amount: temp.amount,
+            orderAddress: {
+              name: temp.address.name,
+              line1: temp.address.line1,
+              line2: temp.address.line2,
+              fullAddress: temp.address.fullAddress,
+              mobileNo: temp.address.mobileNo,
+            },
+            customerMessage: temp.customerMessage,
+            deliveryDate: formatDate(temp.deliveryDate),
+            deliveryTime: {
+              slot: temp.deliveryTime.slot,
+            },
+            paymentMode: temp.paymentMode,
+            id: temp.id,
+            date: new Date(),
+            invoiceId: `1-${temp.id}`,
+          },
+        };
+        let tempArray = [];
+        temp.products.forEach((element) => {
+          tempArray.push({
+            hsnCode: element.hsnCode,
+            recommendedAttribute: element.recommendedAttribute,
+            sellPrice: element.sellPrice,
+            quantity: element.quantity,
+            name: element.name,
+          });
+        });
+        data.invoice.products = tempArray;
+        console.log(data, id);
+        printInvoice(data);
+      };
 
     const deliverOrder = async (id) =>{
         const response = await deliverOrderApi(id,otp);

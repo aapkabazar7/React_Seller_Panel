@@ -94,7 +94,7 @@ const Dashboard = () => {
       const prevApiData = res.data.prevReport; // Extract data from prevReport
       if (apiData && prevApiData) {
         const months = apiData.map((data) => data._id.period);
-        const totalAmounts = apiData.map((data) => data.totalAmount);
+        const totalAmounts = apiData.map((data) => data.totalAmount - data.cancelledAmount);
         const counts = apiData.map((data) => data.count);
         const prevTotalAmounts = prevApiData.map((data) => data.totalAmount); // Extract prevReport total amounts
         const prevCounts = prevApiData.map((data) => data.count); // Extract prevReport counts
@@ -103,13 +103,13 @@ const Dashboard = () => {
           labels: months,
           datasets: [
             {
-              label: selectedOption === "sales" ? "Total Amount" : "Count",
+              label: selectedOption === "sales" ? "Gross Sales" : "Count",
               borderColor: "rgba(54, 162, 235, 0.8)",
               backgroundColor: "rgba(54, 162, 235, 0.8)",
               data: selectedOption === "sales" ? totalAmounts : counts,
             },
             {
-              label: selectedOption === "sales" ? "Previous Total Amount" : "Previous Count", // Label for prevReport data
+              label: selectedOption === "sales" ? "Previous Period Sales" : "Previous Count", // Label for prevReport data
               borderColor: "rgba(255, 99, 132, 0.8)", // Red color for dotted line
               borderDash: [5, 5], // Set border dashes for a dotted line
               data: selectedOption === "sales" ? prevTotalAmounts : prevCounts, // Use prevReport data
@@ -151,7 +151,7 @@ const Dashboard = () => {
       return (
         <div key={index} style={{ flexDirection: "row", display: "flex", alignItems: "center", padding: "10px 10px" }}>
           <div className="dot" style={{ backgroundColor: color, marginRight: 10 }}></div>
-          <span style={{ fontSize: 16 }}>
+          <span style={{ fontSize: 16, textWrap: 'nowrap', width: '22ch' }}>
             {name} <span style={{ fontStyle: "italic" }}>({value})</span>
           </span>
         </div>
@@ -236,6 +236,7 @@ const Dashboard = () => {
     getOrderData().then();
     getCardDataSet().then();
     getStockData().then();
+    refreshData().then();
   }, []);
 
   useEffect(() => {
@@ -460,12 +461,16 @@ const Dashboard = () => {
                 <p style={{ fontSize: 16, fontWeight: "bold" }}>₹{formatIndian(Math.floor(cardData?.totalAmount))}</p>
               </div>
               <div className="statCard">
-                <p style={{ fontSize: 12 }}>Delivery Charge</p>
-                <p style={{ fontSize: 16, fontWeight: "bold" }}>₹{formatIndian(cardData?.deliveryCharges)}</p>
+                <p style={{ fontSize: 12 }}>Cancelled Amount</p>
+                <p style={{ fontSize: 16, fontWeight: "bold" }}>₹{formatIndian(Math.floor(cardData?.cancelledAmount))}</p>
               </div>
               <div className="statCard">
                 <p style={{ fontSize: 12 }}>Gross Sale</p>
                 <p style={{ fontSize: 16, fontWeight: "bold" }}>₹{formatIndian(Math.floor(cardData?.grossSales))}</p>
+              </div>
+              <div className="statCard">
+                <p style={{ fontSize: 12 }}>Delivery Charge</p>
+                <p style={{ fontSize: 16, fontWeight: "bold" }}>₹{formatIndian(cardData?.deliveryCharges)}</p>
               </div>
               <div className="statCard">
                 <p style={{ fontSize: 12 }}>Net Sale</p>
@@ -476,16 +481,12 @@ const Dashboard = () => {
                 <p style={{ fontSize: 16, fontWeight: "bold" }}>{formatIndian(cardData?.orderCount)}</p>
               </div>
               <div className="statCard">
+                <p style={{ fontSize: 12 }}>Cancelled Orders</p>
+                <p style={{ fontSize: 16, fontWeight: "bold" }}>{formatIndian(cardData?.cancelledOrderCount)}</p>
+              </div>
+              <div className="statCard">
                 <p style={{ fontSize: 12 }}>Average Order Amount</p>
                 <p style={{ fontSize: 16, fontWeight: "bold" }}>₹{formatIndian(cardData?.AOV)}</p>
-              </div>
-              <div className="statCard">
-                <p style={{ fontSize: 12 }}>Cancelled Amount</p>
-                <p style={{ fontSize: 16, fontWeight: "bold" }}>{formatIndian(Math.floor(cardData?.cancelledAmount))}</p>
-              </div>
-              <div className="statCard">
-                <p style={{ fontSize: 12 }}>Cancelled Orders</p>
-                <p style={{ fontSize: 16, fontWeight: "bold" }}>₹{formatIndian(cardData?.cancelledOrderCount)}</p>
               </div>
             </>
           )}
@@ -613,7 +614,7 @@ const Dashboard = () => {
                   }}
                 />
               </div>
-              <div style={{ flex: 1, gap: 5, flexDirection: "row", display: "flex", justifyContent: "space-around" }}>{listItem(stockData)}</div>
+              <div style={{ flex: 1, gap: 5, flexDirection: "row", display: "flex", justifyContent: "space-around", flexWrap: 'wrap' }}>{listItem(stockData)}</div>
             </div>
           </div>
         )}

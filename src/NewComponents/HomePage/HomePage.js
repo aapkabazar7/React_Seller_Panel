@@ -28,6 +28,7 @@ import deliveryBoySvg from "../../assets/deliveryBoy.svg";
 import deliverySlotSvg from "../../assets/deliverySlot.svg";
 import deliveryCharge from "../../assets/deliveryCharge.svg";
 import addNewProduct from "../../assets/addNewProduct.svg";
+import disableSlot from "../../assets/disableSlot.svg";
 import Orders from "../../screens/Orders/Orders";
 import Products from "../../screens/Products/Products";
 import Customers from "../../screens/Customers/Customers";
@@ -42,6 +43,7 @@ import Dashboard from "../../screens/Dashboard/Dashboard";
 import DeliveryCharge from "../../screens/DeliveryCharges/DeliveryCharge";
 import NewProduct from "../../screens/NewProduct/NewProduct";
 import NewDeliveryCharge from "../../screens/New_Delivery_Charge/NewDeliveryCharge";
+import DisableSlot from "../../screens/DisableSlots/DisabledSlot";
 
 const drawerWidth = 240;
 
@@ -118,6 +120,7 @@ const menuItems = [
   { title: "Delivery Boy", icon: deliveryBoySvg, route: "/deliveryboy" },
   { title: "Delivery Slots", icon: deliverySlotSvg, route: "/deliveryslot" },
   { title: "Delivery Charges", icon: deliveryCharge, route: "/deliverycharges" },
+  { title: "Disable Slots", icon: disableSlot, route: "/disableslot" },
 ];
 
 const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== "open" })(({ theme, open }) => ({
@@ -148,6 +151,7 @@ export default function MiniDrawer() {
         <Route path="/deliveryslot" element={<DeliverySlot />} />
         <Route path="/orderdetails" element={<OrderDetails />} />
         <Route path="/deliveryboy" element={<DeliveryBoy />} />
+        <Route path="/disableslot" element={<DisableSlot />} />
         <Route path="/newProduct" element={<NewProduct />} />
         <Route path="/bulkorders" element={<BulkOrders />} />
         <Route path="/customers" element={<Customers />} />
@@ -215,7 +219,7 @@ export default function MiniDrawer() {
               disablePadding
               sx={{
                 display: "block",
-                paddingBottom: 1,
+                paddingBottom: 0.5,
               }}>
               <ListItemButton
                 onClick={() => {

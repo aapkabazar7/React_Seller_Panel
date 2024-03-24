@@ -60,7 +60,7 @@ export default function DeliveryOfferCard({ item, index }) {
   };
 
   return (
-    <div style={{ backgroundColor: "#f0f0f0", padding: 10, borderRadius: 10, width: "100%", alignItems: "center" }}>
+    <div style={{ backgroundColor: "#f0f0f0", padding: 10, borderRadius: 10, alignItems: "center" }}>
       <div style={{ flex: 1, display: "flex", flexDirection: "row", marginBottom: 10 }}>
         <div style={{ display: "flex", flex: 0.8, flexDirection: "row", alignItems: "flex-end" }}>
           {/* <div

@@ -66,7 +66,9 @@ const MonthlyChart = ({ handleOptionChange, chartData, chartDuration, selectedOp
                     var value = tooltipItem.yLabel;
                     // If the tooltip is for the second dataset (prevReport), add "Previous" to the label
                     if (tooltipItem.datasetIndex === 1) {
-                      datasetLabel = "Previous " + datasetLabel;
+                      datasetLabel = "Previous Period" + datasetLabel;
+                    }else{
+                      datasetLabel = "Current Period" + datasetLabel;
                     }
                     return datasetLabel + value;
                   }
@@ -74,11 +76,13 @@ const MonthlyChart = ({ handleOptionChange, chartData, chartDuration, selectedOp
               },
               plugins: {
                 legend: {
-                  display: false,
+                  display: true,
+                  position  : 'bottom',
+
                 },
               },
               animation: {
-                duration: 0,
+                duration: 1000,
               },
             }}
           />

@@ -91,9 +91,9 @@ textarea:focus {
 }
 .dot {
   border-radius: 50%;
-  width: 10px;
+  min-width:  10px;
   padding: 5px;
-  height: 10px;
+  min-height: 10px;
 }
 #topProducts {
   background-color: rgb(255, 255, 255);
