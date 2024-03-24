@@ -478,7 +478,7 @@ const SingleOrderCard = ({ item, index, fetchData, setData, currentPage, setCurr
                     alignItems: "center",
                     display: "flex",
                     flexDirection: "column",
-                    backgroundColor: status[_.status] === 1 ? "#dddddd" : status[_.status] === 2 ? "rgb(33 216 0)" : "#dddddd",
+                    backgroundColor: status[_.status] === 1 ? "#dddddd" : status[_.status] === 2 ? "rgb(64 238 173)" : "#dddddd",
                     color: status[_.status] === 1 ? "white" : status[_.status] === 2 ? "white" : "white",
                     borderRadius: 12,
                     maxHeight: 50,
