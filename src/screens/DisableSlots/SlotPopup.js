@@ -22,7 +22,8 @@ export default function AlertDialogSlide({ open, setOpen, children, heading }) {
         onClose={() => {
           setOpen(false);
         }}
-        aria-describedby="alert-dialog-slide-description">
+        aria-describedby="alert-dialog-slide-description"
+      >
         <DialogTitle>{heading}</DialogTitle>
         <DialogContent>{children}</DialogContent>
       </Dialog>
