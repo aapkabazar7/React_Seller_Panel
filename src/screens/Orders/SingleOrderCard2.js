@@ -176,7 +176,7 @@ const SingleOrderCard = ({ item, index, fetchData, setData, currentPage, setCurr
         },
         paymentMode: temp.paymentMode,
         id: temp.id,
-        date: new Date(),
+        date: temp ? formatDate(temp.date) : "",
         invoiceId: `1-${temp.id}`,
       },
     };
@@ -424,6 +424,9 @@ const SingleOrderCard = ({ item, index, fetchData, setData, currentPage, setCurr
               {item.address?.line1} {item.address?.line2} <span style={{ fontWeight: "bold" }}> -{item.address?.fullAddress}</span>
             </p>
           </div>
+          {item.customerMessage ?
+            <span style={{ marginTop: 40, backgroundColor: '#ff00002e', border: '1px solid red', padding: '5px', borderRadius: 8 }}> Customer Message : {item.customerMessage}</span>
+            : null}
         </div>
 
         <div className="CELL 5" style={{ display: "flex", flexDirection: "row", flex: 1 }}>

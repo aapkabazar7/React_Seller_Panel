@@ -14,7 +14,7 @@
 }
 #orderDetailsRootContainer #topBtnsDiv button{
     border: 0;
-    box-shadow:  1px 1px 2px 0px rgba(0,0,0,0.4);
+    box-shadow:  1px 1px 2px 0px rgba(0, 0, 0, 0.126);
     background-color: white;
     border-radius: 12px;
     padding: 12px 15px 12px 10px;
@@ -31,7 +31,7 @@
     background-color: white;
     height: 300px;
     border-radius: 12px;
-    box-shadow:  1px 1px 2px 0px rgba(0,0,0,0.4);
+    box-shadow:  1px 1px 2px 0px rgba(0,0,0,0.126);
 }
 #orderDetailsContainer #sellerDetails {
     display: flex;
@@ -73,16 +73,18 @@
     margin: 10px 20px;
     background-color: white;
     height: 30px;
-    justify-content: left;
+    justify-content: space-between;
     align-items: center;
     gap: 100px;
     padding: 10px 20px;
+    padding-right: 80px;
     border-radius: 12px;
-    box-shadow:  1px 1px 2px 0px rgba(0,0,0,0.4);
+    box-shadow:  1px 1px 2px 0px rgba(0,0,0,0.126);
 }
 #orderDetailsRootContainer #productList{
     background-color: white;
     margin: 10px 20px;
     border-radius: 12px;
     padding: 10px;
+    box-shadow:  1px 1px 2px 0px rgba(0,0,0,0.126);
 }

@@ -309,25 +309,25 @@ const Orders = () => {
           <h5>All Orders</h5>
           <div className="orderNavButtons">
             <button style={{ width: 140 }} className={orders === "all" ? "active" : ""} onClick={() => handleButtonClick("all")}>
-              All orders ({orderCount && orderCount[0].count})
+              All orders ({orderCount && orderCount[0]?.count})
             </button>
             <button style={{ width: 140 }} className={orders === "pending" ? "active" : ""} onClick={() => handleButtonClick("pending")}>
-              New orders ({orderCount && orderCount[5].count})
+              New orders ({orderCount && orderCount[5]?.count})
             </button>
             <button style={{ width: 140 }} className={orders === "confirmed" ? "active" : ""} onClick={() => handleButtonClick("confirmed")}>
-              Checking ({orderCount && orderCount[2].count})
+              Checking ({orderCount && orderCount[2]?.count})
             </button>
             <button style={{ width: 140 }} className={orders === "processed" ? "active" : ""} onClick={() => handleButtonClick("processed")}>
-              Processed ({orderCount && orderCount[6].count})
+              Processed ({orderCount && orderCount[6]?.count})
             </button>
             <button style={{ width: 140 }} className={orders === "dispatched" ? "active" : ""} onClick={() => handleButtonClick("dispatched")}>
-              Dispatched ({orderCount && orderCount[4].count})
+              Dispatched ({orderCount && orderCount[4]?.count})
             </button>
             <button style={{ width: 140 }} className={orders === "delivered" ? "active" : ""} onClick={() => handleButtonClick("delivered")}>
-              Delivered ({orderCount && orderCount[3].count})
+              Delivered ({orderCount && orderCount[3]?.count})
             </button>
             <button style={{ width: 140 }} className={orders === "cancelled" ? "active" : ""} onClick={() => handleButtonClick("cancelled")}>
-              Cancelled ({orderCount && orderCount[1].count})
+              Cancelled ({orderCount && orderCount[1]?.count})
             </button>
           </div>
         </div>
