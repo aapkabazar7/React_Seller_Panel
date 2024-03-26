@@ -173,7 +173,7 @@ const Orders = () => {
       }
     }
     else
-      alert("Enter 10 digit numeber.")
+    navigate(`/orderdetails?id=${PhoneNumber}`)
   }
 
   const loadOrders = () => {
@@ -199,7 +199,7 @@ const Orders = () => {
     <div>
       <div id="FilterOrdersDiv">
         <div id="filterNav">
-          <input className="searchOrder" defaultValue={PhoneNumber} placeholder="Search by Mobile" type="text" onChange={(e) => setPhoneNumber(e.target.value)} />
+          <input className="searchOrder" placeholder="Search by Mobile or order ID" type="text" onChange={(e) => setPhoneNumber(e.target.value)} />
           <button
             onClick={handlePhoneNumber}
             style={{
