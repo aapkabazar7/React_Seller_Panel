@@ -89,7 +89,7 @@ const DeliverySlot = () => {
             flexDirection: "column",
             height: "85vh",
           }}>
-          <div style={{ display: 'flex', flex: 1, justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ display: "flex", flex: 1, justifyContent: "space-between", alignItems: "center" }}>
             <span style={{ fontSize: 18, fontWeight: "bold" }}>Serving Areas {"(" + filteredAreas?.length + ")"}</span>
           </div>
           <input
@@ -181,8 +181,9 @@ const DeliverySlot = () => {
                       return (
                         <tr style={{ boxShadow: "none" }} key={index}>
                           <td>{item.slot}</td>
-                          <td style={{ fontWeight: "bold", color: item.isDisabled ? "red" : "green", textTransform: "capitalize" }}>{`${item.isDisabled ? "Disabled" : "Enabled"
-                            }`}</td>
+                          <td style={{ fontWeight: "bold", color: item.isDisabled ? "red" : "green", textTransform: "capitalize" }}>{`${
+                            item.isDisabled ? "Disabled" : "Enabled"
+                          }`}</td>
                           <td>{item.day !== null ? item.day : "n/a"}</td>
                           <td>{item.orderCount}</td>
                           <td>{decodeMinutesToTime(item.value.minutes)}</td>
@@ -224,14 +225,13 @@ const DeliverySlot = () => {
                 </table>
               </div>
               <div style={{ display: "flex", flex: 1, flexDirection: "column", gap: 20 }}>
-                <div
-                  onClick={async () => {
-                    console.log("INITIAL TIME SLOT ");
-                    var initialTimeSlot = { slot: "10:00AM - 08:00PM", isDisabled: true, day: 0, orderCount: 0, value: { minutes: 0 } };
-                    await bulkUpdate([Number(areaDetails.area)], [...bulkAreaEdit, initialTimeSlot]);
-                  }}
-                  style={{ display: "flex", flexDirection: "row", flex: 1, gap: 20, marginTop: 10 }}>
+                <div style={{ display: "flex", flexDirection: "row", flex: 1, gap: 20, marginTop: 10 }}>
                   <button
+                    onClick={async () => {
+                      console.log("INITIAL TIME SLOT ");
+                      var initialTimeSlot = { slot: "10:00AM - 08:00PM", isDisabled: true, day: 0, orderCount: 0, value: { minutes: 0 } };
+                      await bulkUpdate([Number(areaDetails.area)], [...bulkAreaEdit, initialTimeSlot]);
+                    }}
                     style={{
                       cursor: "pointer",
                       backgroundColor: "#ffef03",
@@ -388,11 +388,7 @@ const DeliverySlot = () => {
           )}
         </AlertDialogSlide>
       )}
-      {true ?
-        <AlertDialogSlide open={openDisablePopup} heading={`Disable Pincodes`} setOpen={setOpenDisablePopup}>
-
-        </AlertDialogSlide> : <></>
-      }
+      {true ? <AlertDialogSlide open={openDisablePopup} heading={`Disable Pincodes`} setOpen={setOpenDisablePopup}></AlertDialogSlide> : <></>}
     </div>
   );
 };

@@ -157,9 +157,9 @@ export function printInvoice(data) {
   doc.text(140, verticalOffset + 5, "ORDER DETAILS");
   doc.setFontSize(PS.fontSize - 2);
   let invoiceId = data.invoice.invoiceId ? data.invoice.invoiceId : "";
-  const invoiceNumber = `Invoice Number: ` + invoiceId;
+  const invoiceNumber = `Order Number: ` + data.invoice.id;
   doc.text(140, verticalOffset + 10, invoiceNumber);
-  const invoiceDate = `Invoice Date: ${moment(data.invoice.date).format("MMM DD, YYYY")}`;
+  const invoiceDate = `Order Date: ${moment(data.invoice.date).format("MMM DD, YYYY")}`;
   doc.text(140, verticalOffset + 15, invoiceDate);
   const deliveryDate = `Delivery Date: ${moment(data.invoice.deliveryDate.date ? data.invoice.deliveryDate.date : data.invoice.deliveryDate).format(
     "MMM DD, YYYY"

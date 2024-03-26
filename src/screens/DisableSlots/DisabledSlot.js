@@ -1,11 +1,35 @@
 import React, { useEffect, useState } from "react";
 import "./DisabledSlot.css";
 import axios from "axios";
-import { bulkUpdateTimeSlots, getAreaDetailsApi, getServeAreasApi } from "../../Apis/Delivery";
+import {
+  bulkUpdateTimeSlots,
+  getAreaDetailsApi,
+  getServeAreasApi,
+} from "../../Apis/Delivery";
 import AlertDialogSlide from "./SlotPopup";
-import { Button, DialogActions, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from "@mui/material";
-import { convertTo24Hour, convertToAMPM, decodeMinutesToTime, encodeTimeToMinutes } from "../../utils/toast";
+import {
+  Button,
+  DialogActions,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Radio,
+  RadioGroup,
+} from "@mui/material";
+import {
+  convertTo24Hour,
+  convertToAMPM,
+  decodeMinutesToTime,
+  encodeTimeToMinutes,
+} from "../../utils/toast";
 import { toast } from "react-toastify";
+import {
+  deleteDisableSlots,
+  disabledSlots,
+  getDisabledSlots,
+} from "../../Apis/DisableSlot";
+import { calendarFormat } from "moment";
+import { formatDate } from "../../utils/DateHandler";
 
 const DisableSlot = () => {
   const [selectedArea, setSelectedArea] = useState(null);
@@ -20,14 +44,36 @@ const DisableSlot = () => {
   const [showSave, setShowSave] = useState(false);
   const [bulkPincodes, setBulkPincodes] = useState("");
   const [tempChanges, setTempChanges] = useState(null);
+
+  //   //{
+  //     "success": true,
+  //     "message": "slots found",
+  //     "slots": [
+  //         {
+  //             "_id": "65feb3acf7dd2c35d18c3696",
+  //             "isCancelled": false,
+  //             "sellerId": "617d2982bd68c94d0bcb9200",
+  //             "areaId": "61c6d9b1885924407c391feb",
+  //             "message": "holi festival",
+  //             "startdate": "2024-03-25T00:00:00.000Z",
+  //             "enddate": "2024-03-25T00:00:00.000Z",
+  //             "startHr": "0",
+  //             "endHr": "23",
+  //             "startSlot": "12:01AM",
+  //             "endSlot": "11:59PM",
+  //             "__v": 0
+  //         }
+  //     ]
+  // }
+
   const getAreaDetail = async () => {
     try {
       setBulkAreaEdit([]);
       setAreaDetails(null);
-      const res = await getAreaDetailsApi(selectedArea);
-      if (res) {
-        setAreaDetails(res.data);
-        setBulkAreaEdit(res.data.timeSlot);
+      const res = await getDisabledSlots(selectedArea);
+      if (res && res.success) {
+        setAreaDetails(res.slots);
+        setBulkAreaEdit(res.slots);
       }
     } catch (error) {
       console.log(error, "DeliverySLot.js line 16");
@@ -54,7 +100,9 @@ const DisableSlot = () => {
 
   React.useEffect(() => {
     if (searchPincode) {
-      const filtered = totalArea.filter((area) => area.areaName.includes(searchPincode));
+      const filtered = totalArea.filter((area) =>
+        area.areaName.includes(searchPincode)
+      );
       setFilteredAreas(filtered);
     } else {
       setFilteredAreas(totalArea);
@@ -63,33 +111,68 @@ const DisableSlot = () => {
 
   const bulkUpdate = async (arrayOfPincodes, arrayOfObjects) => {
     console.log(arrayOfObjects, arrayOfPincodes);
-    const result = await bulkUpdateTimeSlots({
+    const result = await disabledSlots({
       pincodes: arrayOfPincodes,
-      timeSlot: arrayOfObjects,
+      ...arrayOfObjects,
     });
+    toast.info(
+      result.message ? result.message : result.error ? result.error : "Error"
+    );
     getServeAreas().then();
     getAreaDetail().then();
     if (arrayOfPincodes.length > 1) setSelectedArea(null);
-    toast.success(result.message);
   };
+
+  React.useEffect(() => {
+    if (tempChanges) setOpenPopup(true);
+  }, [tempChanges]);
+
   return (
-    <div style={{ flex: 1, display: "flex", backgroundColor: "#f3f9f7", flexDirection: "column", padding: 20, gap: 20 }}>
-      <div style={{ flex: 1, display: "flex", flexDirection: "row-reverse", gap: 20 }}>
+    <div
+      style={{
+        flex: 1,
+        display: "flex",
+        overflow: "hidden",
+        backgroundColor: "#f3f9f7",
+        flexDirection: "column",
+        padding: 20,
+        gap: 20,
+      }}
+    >
+      <div
+        style={{
+          flex: 1,
+          display: "flex",
+          overflow: "hidden",
+          flexDirection: "row-reverse",
+          gap: 20,
+        }}
+      >
         <div
           style={{
             backgroundColor: "rgb(255, 255, 255)",
             padding: "15px",
             gap: 10,
-            flex: 1,
+            flex: 0.3,
             overflow: "hidden",
             borderRadius: "10px",
             boxShadow: "0px 0px 10px 0px #0000001A",
             display: "flex",
             flexDirection: "column",
-            height: "85vh",
-          }}>
-          <div style={{ display: 'flex', flex: 1, justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: 18, fontWeight: "bold" }}>Serving Areas {"(" + filteredAreas?.length + ")"}</span>
+            height: "83vh",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              flex: 1,
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <span style={{ fontSize: 18, fontWeight: "bold" }}>
+              Serving Areas {"(" + filteredAreas?.length + ")"}
+            </span>
           </div>
           <input
             autoComplete="false"
@@ -109,20 +192,26 @@ const DisableSlot = () => {
               overflowY: "scroll",
               height: "70vh",
               padding: 10,
-            }}>
+            }}
+          >
             <table>
               <thead>
                 <tr style={{ backgroundColor: "1px solid #eee" }}>
                   <th>Sr No</th>
                   <th>Area Name</th>
-                  <th>Total Slots</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredAreas &&
                   filteredAreas.map((area, index) => (
                     <tr
-                      style={{ cursor: "pointer", boxShadow: selectedArea === area._id ? "0px 0px 10px 1px #ccc" : "none" }}
+                      style={{
+                        cursor: "pointer",
+                        boxShadow:
+                          selectedArea === area._id
+                            ? "0px 0px 10px 1px #ccc"
+                            : "none",
+                      }}
                       onClick={() => {
                         if (selectedArea === area._id) {
                           //Deselection of selected card
@@ -134,10 +223,10 @@ const DisableSlot = () => {
                         }
                         setSearchPincode("");
                       }}
-                      key={area._id}>
+                      key={area._id}
+                    >
                       <td>{index + 1}</td>
                       <td>{area.areaName}</td>
-                      <td>{area.totalSlot}</td>
                     </tr>
                   ))}
               </tbody>
@@ -149,29 +238,51 @@ const DisableSlot = () => {
             backgroundColor: "rgb(255, 255, 255)",
             padding: "15px",
             gap: 10,
-            flex: 1,
-            height: "85vh",
-            overflowX: "hidden",
-            overflowY: "hidden",
+            flex: 0.7,
+            height: "83vh",
+            overflow: "hidden",
             borderRadius: "10px",
             boxShadow: "0px 0px 10px 0px #0000001A",
             display: "flex",
             flexDirection: "column",
-          }}>
+          }}
+        >
           {selectedArea !== null ? (
-            <div style={{ border: "0px solid red", display: "flex", justifyContent: "space-between", flexDirection: "column" }}>
-              <span style={{ textDecoration: "underline", fontWeight: "bold", textAlign: "center", paddingBottom: 10 }}>
+            <div
+              style={{
+                border: "0px solid red",
+                display: "flex",
+                justifyContent: "space-between",
+                flexDirection: "column",
+              }}
+            >
+              <span
+                style={{
+                  textDecoration: "underline",
+                  fontWeight: "bold",
+                  textAlign: "center",
+                  paddingBottom: 10,
+                }}
+              >
                 {filteredAreas.find((a) => a._id === selectedArea)?.areaName}
               </span>
-              <div style={{ overflowY: "auto", maxHeight: "50vh", minHeight: "50vh", flex: 4 }}>
+              <div
+                style={{
+                  overflowY: "auto",
+                  maxHeight: "50vh",
+                  minHeight: "50vh",
+                  flex: 4,
+                }}
+              >
                 <table style={{ fontSize: 14 }}>
                   <thead style={{ fontWeight: "normal" }}>
                     <tr>
-                      <th style={{ fontWeight: "normal" }}>Slot Time</th>
-                      <th style={{ fontWeight: "normal" }}>Status</th>
-                      <th style={{ fontWeight: "normal" }}>Day</th>
-                      <th style={{ fontWeight: "normal" }}>Order Count</th>
-                      <th style={{ fontWeight: "normal" }}>Closing time</th>
+                      <th style={{ fontWeight: "normal" }}>Sr No</th>
+                      <th style={{ fontWeight: "normal" }}>Start Date</th>
+                      <th style={{ fontWeight: "normal" }}>Start Time</th>
+                      <th style={{ fontWeight: "normal" }}>End Date</th>
+                      <th style={{ fontWeight: "normal" }}>End Time</th>
+                      <th style={{ fontWeight: "normal" }}>Message</th>
                       <th style={{ fontWeight: "normal" }}>Action</th>
                     </tr>
                   </thead>
@@ -179,29 +290,50 @@ const DisableSlot = () => {
                     {bulkAreaEdit.map((item, index) => {
                       return (
                         <tr style={{ boxShadow: "none" }} key={index}>
-                          <td>{item.slot}</td>
-                          <td style={{ fontWeight: "bold", color: item.isDisabled ? "red" : "green", textTransform: "capitalize" }}>{`${item.isDisabled ? "Disabled" : "Enabled"
-                            }`}</td>
-                          <td>{item.day !== null ? item.day : "n/a"}</td>
-                          <td>{item.orderCount}</td>
-                          <td>{decodeMinutesToTime(item.value.minutes)}</td>
+                          <td>{index + 1}</td>
+                          <td>{formatDate(new Date(item.startdate))}</td>
+                          <td>{item.startSlot}</td>
+                          <td>{formatDate(new Date(item.enddate))}</td>
+                          <td>{item.endSlot}</td>
+                          <td style={{ textTransform: "capitalize" }}>
+                            {item.message}
+                          </td>
                           <td>
-                            <div style={{ display: "flex", flexDirection: "row" }}>
-                              <button
+                            <div
+                              style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                flexDirection: "row",
+                                gap: 10,
+                              }}
+                            >
+                              {/* <button
                                 onClick={() => {
                                   setModifySlot(index);
                                   setTempChanges(item);
-                                  setOpenPopup(true);
                                 }}
                                 style={{ borderRadius: 8, fontWeight: "bold", border: "1px solid grey", cursor: "pointer" }}>
                                 Modify
-                              </button>
+                              </button> */}
                               <button
-                                onClick={() => {
-                                  var confirmDelete = window.confirm(`Delete ${item.slot} slot?`);
+                                onClick={async () => {
+                                  var confirmDelete =
+                                    window.confirm(`Delete this slot?`);
                                   if (confirmDelete) {
-                                    var temp = bulkAreaEdit.filter((_, i) => i !== index);
-                                    bulkUpdate([Number(areaDetails.area)], temp);
+                                    try {
+                                      toast.loading("Deleting Slot");
+                                      const res = await deleteDisableSlots(
+                                        item._id
+                                      );
+                                      toast.dismiss();
+                                      if (res) {
+                                        toast.success("Slot Deleted");
+                                        getAreaDetail().then();
+                                      } else {
+                                        toast.error("Error Deleting Slot");
+                                      }
+                                    } catch (error) {}
                                   }
                                 }}
                                 style={{
@@ -211,7 +343,8 @@ const DisableSlot = () => {
                                   cursor: "pointer",
                                   color: "#e21b1b",
                                   fontWeight: "bold",
-                                }}>
+                                }}
+                              >
                                 Delete
                               </button>
                             </div>
@@ -222,15 +355,35 @@ const DisableSlot = () => {
                   </tbody>
                 </table>
               </div>
-              <div style={{ display: "flex", flex: 1, flexDirection: "column", gap: 20 }}>
+              <div
+                style={{
+                  display: "flex",
+                  flex: 1,
+                  flexDirection: "column",
+                  gap: 20,
+                }}
+              >
                 <div
-                  onClick={async () => {
-                    console.log("INITIAL TIME SLOT ");
-                    var initialTimeSlot = { slot: "10:00AM - 08:00PM", isDisabled: true, day: 0, orderCount: 0, value: { minutes: 0 } };
-                    await bulkUpdate([Number(areaDetails.area)], [...bulkAreaEdit, initialTimeSlot]);
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    flex: 1,
+                    gap: 20,
+                    marginTop: 10,
                   }}
-                  style={{ display: "flex", flexDirection: "row", flex: 1, gap: 20, marginTop: 10 }}>
+                >
                   <button
+                    onClick={async () => {
+                      setTempChanges({
+                        message: "",
+                        startdate: new Date().toISOString(),
+                        enddate: new Date().toISOString(),
+                        startHr: "00",
+                        endHr: "23",
+                        startSlot: "12:00AM",
+                        endSlot: "11:59PM",
+                      });
+                    }}
                     style={{
                       cursor: "pointer",
                       backgroundColor: "#ffef03",
@@ -238,14 +391,15 @@ const DisableSlot = () => {
                       borderWidth: 1,
                       padding: 10,
                       fontSize: 14,
-                      width: "50%",
+                      flex: 1,
                       borderRadius: 10,
                       borderStyle: "solid",
                       borderColor: "#e3d400",
-                    }}>
+                    }}
+                  >
                     Create New Slot ➕
                   </button>
-                  <button
+                  {/* <button
                     onClick={async (e) => {
                       e.stopPropagation();
                       bulkUpdate(bulkPincodes.split(","), bulkAreaEdit);
@@ -264,127 +418,211 @@ const DisableSlot = () => {
                       borderColor: "#e3d400",
                     }}>
                     Bulk Save
-                  </button>
+                  </button> */}
                 </div>
-                <div>
-                  <span style={{ fontSize: 18, fontWeight: "bold" }}> Apply to additional Pincodes:</span>
-                </div>
-                <textarea
-                  style={{ height: 70, resize: "none", borderRadius: 10, padding: 10, color: "#696969" }}
-                  value={bulkPincodes}
-                  onChange={(e) => {
-                    setBulkPincodes(e.target.value);
-                  }}
-                />
               </div>
             </div>
           ) : (
-            <div style={{ color: "red", fontStyle: "italic", textAlign: "center" }}>Select a pincode to view details. </div>
+            <div
+              style={{ color: "red", fontStyle: "italic", textAlign: "center" }}
+            >
+              Select a pincode to view details.{" "}
+            </div>
           )}
         </div>
       </div>
-      {modifySlot !== null && (
-        <AlertDialogSlide open={openPopup} heading={`Slot modification (${areaDetails?.areaName})`} setOpen={setOpenPopup}>
-          <div>
-            <div style={{ display: "flex", flexDirection: "row", gap: 20 }}>
-              <table>
-                <tbody>
-                  <tr>
-                    <td>Start Time (24 hour format)</td>
-                    <td>
-                      <input
-                        type="time"
-                        value={convertTo24Hour(tempChanges.slot.toString().split(" - ")[0])}
-                        onChange={(e) => {
-                          setTempChanges((prev) => ({
-                            ...prev,
-                            slot: `${convertToAMPM(e.target.value)} - ${tempChanges.slot.toString().split(" - ")[1]}`,
-                          }));
-                          setShowSave(true);
-                        }}
-                      />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>End Time (24 hour format)</td>
-                    <td>
-                      <input
-                        type="time"
-                        value={convertTo24Hour(tempChanges.slot.toString().split(" - ")[1])}
-                        onChange={(e) => {
-                          setTempChanges((prev) => ({
-                            ...prev,
-                            slot: `${tempChanges.slot.toString().split(" - ")[0]} - ${convertToAMPM(e.target.value)}`,
-                          }));
-                          setShowSave(true);
-                        }}
-                      />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Day</td>
-                    <td>
-                      <input
-                        type="number"
-                        style={{ textAlign: "center" }}
-                        onChange={(e) => {
-                          setTempChanges((prev) => ({ ...prev, day: e.target.value }));
-                          setShowSave(true);
-                        }}
-                        defaultValue={tempChanges.day}
-                      />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Status</td>
-                    <td>
-                      <FormControl>
-                        <RadioGroup
-                          aria-labelledby="demo-radio-buttons-group-label"
-                          onChange={(e, b) => {
-                            setTempChanges((prev) => ({ ...prev, isDisabled: b === "true" ? true : false }));
-                            setShowSave(true);
-                          }}
-                          value={tempChanges?.isDisabled.toString()}
-                          name="radio-buttons-group">
-                          <FormControlLabel value="true" control={<Radio />} label="Disabled" />
-                          <FormControlLabel value="false" control={<Radio />} label="Enabled" />
-                        </RadioGroup>
-                      </FormControl>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Closing Time</td>
-                    <td>
-                      <input
-                        type="time"
-                        value={decodeMinutesToTime(tempChanges.value.minutes)}
-                        onChange={(e) => {
-                          setTempChanges((prev) => ({ ...prev, value: { minutes: encodeTimeToMinutes(e.target.value) } }));
-                          setShowSave(true);
-                        }}
-                      />
-                    </td>
-                  </tr>
-                </tbody>
+      {tempChanges !== null && (
+        <AlertDialogSlide
+          open={openPopup}
+          heading={`Slot modification `}
+          setOpen={setOpenPopup}
+        >
+          <div style={{ flex: 1, display: "flex", overflow: "hidden" }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                gap: 20,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <table style={{ alignItems: "center", borderSpacing: 20 }}>
+                <tr>
+                  <td>
+                    <span>Start Date</span>
+                  </td>
+                  <td>
+                    <input
+                      onChange={(e) => {
+                        setTempChanges((prev) => ({
+                          ...prev,
+                          startdate: e.target.value,
+                        }));
+                        // alert(e.target.value);
+                      }}
+                      type="date"
+                      defaultValue={formatDate(
+                        new Date(tempChanges?.startdate)
+                      )}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <span>Start Time</span>
+                  </td>
+                  <td>
+                    <input
+                      type="time"
+                      onChange={(e) => {
+                        setTempChanges((prev) => ({
+                          ...prev,
+                          startSlot: convertToAMPM(e.target.value),
+                          startHr: e.target.value.substring(0, 2),
+                        }));
+                      }}
+                      defaultValue={convertTo24Hour(tempChanges.startSlot)}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <span>End Date</span>
+                  </td>
+                  <td>
+                    <input
+                      onChange={(e) => {
+                        setTempChanges((prev) => ({
+                          ...prev,
+                          enddate: e.target.value,
+                          endHr: e.target.value.substring(0, 2),
+                        }));
+                        // alert(e.target.value);
+                      }}
+                      type="date"
+                      defaultValue={formatDate(new Date(tempChanges?.enddate))}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <span>End Time</span>
+                  </td>
+                  <td>
+                    <input
+                      onChange={(e) => {
+                        setTempChanges((prev) => ({
+                          ...prev,
+                          endSlot: convertToAMPM(e.target.value),
+                        }));
+                      }}
+                      type="time"
+                      defaultValue={convertTo24Hour(tempChanges.endSlot)}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <span>Message</span>
+                  </td>
+                  <td>
+                    <input
+                      onChange={(e) => {
+                        setTempChanges((prev) => ({
+                          ...prev,
+                          message: e.target.value,
+                        }));
+                      }}
+                      defaultValue={tempChanges.message}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <span>Additional Pincodes:</span>
+                  </td>
+                  <td>
+                    <textarea
+                      rows={5}
+                      cols={40}
+                      style={{
+                        border: "none",
+                        outline: "1px solid #aaa",
+                        resize: "none",
+                        padding: 10,
+                        borderRadius: 12,
+                        color: "#696969",
+                      }}
+                      placeholder="Optional"
+                    />
+                  </td>
+                </tr>
               </table>
             </div>
           </div>
 
-          <DialogActions>
-            <Button
-              color="primary"
-              onClick={() => {
-                const newArray = [...bulkAreaEdit];
-                newArray[modifySlot] = tempChanges;
-                setBulkAreaEdit(newArray);
-                bulkUpdate([Number(areaDetails.area)], newArray);
-                setOpenPopup(false);
-              }}>
-              Save Changes
-            </Button>
-          </DialogActions>
-
+          <div
+            style={{
+              display: "flex",
+              flex: 1,
+            }}
+          >
+            <div style={{ display: "flex", flex: 1 }}>
+              <p>
+                From:
+                <span style={{ fontWeight: "bold" }}>
+                  {new Date(tempChanges.startdate).toDateString()}
+                </span>
+              </p>
+            </div>
+            <div>
+              <p>
+                To:
+                <span style={{ fontWeight: "bold" }}>
+                  {new Date(tempChanges.enddate).toDateString()}
+                </span>
+              </p>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <DialogActions
+                style={{ alignItems: "center", justifyContent: "center" }}
+              >
+                <Button
+                  color="primary"
+                  onClick={() => {
+                    if (tempChanges.message.length < 1)
+                      toast.error("Message is required");
+                    else {
+                      // alert(JSON.stringify(bulkAreaEdit[modifySlot]));
+                      const newArray = [...bulkAreaEdit];
+                      // console.log("newObj:", newObj);
+                      newArray[modifySlot] = tempChanges;
+                      setBulkAreaEdit(newArray);
+                      bulkUpdate(
+                        [
+                          filteredAreas
+                            .find((a) => a._id === selectedArea)
+                            ?.areaName.substring(0, 6),
+                        ],
+                        tempChanges
+                      );
+                      setOpenPopup(false);
+                    }
+                  }}
+                >
+                  Confirm
+                </Button>
+              </DialogActions>
+            </div>
+          </div>
         </AlertDialogSlide>
       )}
     </div>

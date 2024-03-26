@@ -19,11 +19,11 @@ export default function AlertDialogSlide({ open, setOpen, children, heading }) {
         sx={{ borderRadius: 10 }}
         open={open}
         TransitionComponent={Transition}
-        keepMounted
         onClose={() => {
           setOpen(false);
         }}
-        aria-describedby="alert-dialog-slide-description">
+        aria-describedby="alert-dialog-slide-description"
+      >
         <DialogTitle>{heading}</DialogTitle>
         <DialogContent>{children}</DialogContent>
       </Dialog>
